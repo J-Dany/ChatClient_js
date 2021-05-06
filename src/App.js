@@ -15,11 +15,11 @@ class App extends React.Component
   render()
   {
     return (
-      <div>
+      <>
         <Header onlineUsers={this.state.onlineUsers} />
-        <hr className="m-1" />
+        <hr className="mt-3 mb-4" />
         <Body />
-      </div>
+      </>
     )
   }
 }

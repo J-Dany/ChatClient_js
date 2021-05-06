@@ -1,15 +1,25 @@
 import React from "react"
-import circleIcon from "../../icons/circle-16.png"
+import settingsIcon from "../../icons/settings.png"
+import Modal from "./Modal"
 
 function Header(props)
 {
     return (
-        <h1 className="font-sans p-1">
-            <img src={circleIcon} alt="online" className="inline-block object-top" />
-            <div className="inline-block h-full">
-                <span className="p-1 flex justify-center items-center">{props.onlineUsers} utenti online</span>
+        <div className="font-sans grid grid-cols-2">
+            <div className="flex items-center">
+                <div className="inline-block mr-2">
+                    <div className="online-cirle object-center"></div>
+                </div>
+                <div className="inline-block">
+                    <p>{props.onlineUsers} utenti online</p>
+                </div>
             </div>
-        </h1>
+            <div className="flex justify-end">
+                <button type="button">
+                    <img src={settingsIcon} width="32" height="32" alt="settings" />
+                </button>
+            </div>
+        </div>
     )
 }
 
