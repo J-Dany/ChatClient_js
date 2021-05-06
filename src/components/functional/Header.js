@@ -1,25 +1,18 @@
 import React from "react"
-import settingsIcon from "../../icons/settings.png"
-import Modal from "./Modal"
+import { AppBar, Toolbar, IconButton } from "@material-ui/core"
+import MoreIcon from '@material-ui/icons/MoreVert'
 
 function Header(props)
 {
     return (
-        <div className="font-sans grid grid-cols-2">
-            <div className="flex items-center">
-                <div className="inline-block mr-2">
-                    <div className="online-cirle object-center"></div>
-                </div>
-                <div className="inline-block">
-                    <p>{props.onlineUsers} utenti online</p>
-                </div>
-            </div>
-            <div className="flex justify-end">
-                <button type="button">
-                    <img src={settingsIcon} width="32" height="32" alt="settings" />
-                </button>
-            </div>
-        </div>
+        <AppBar position="static" style={{backgroundColor: props.palette.dark}}>
+            <Toolbar>
+                <div style={{flexGrow: "1"}}></div>
+                <IconButton edge="start" aria-label="menu" style={{color: props.palette.textColor}}>
+                    <MoreIcon />
+                </IconButton>
+            </Toolbar>
+        </AppBar>
     )
 }
 

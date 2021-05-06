@@ -7,8 +7,23 @@ class App extends React.Component
   constructor(props)
   {
     super(props)
+
+    this.primary = {
+      textColor: "#ffffff",
+      color: "#37474f",
+      light: "#62727b",
+      dark: "#102027"
+    }
+
+    this.secondary = {
+      textColor: "#ffffff",
+      color: "#546e7a",
+      light: "#819ca9",
+      dark: "#29434e"
+    }
+
     this.state = {
-      onlineUsers: 0
+      palette: this.primary
     }
   }
 
@@ -16,9 +31,8 @@ class App extends React.Component
   {
     return (
       <>
-        <Header onlineUsers={this.state.onlineUsers} />
-        <hr className="mt-3 mb-4" />
-        <Body />
+        <Header palette={this.state.palette} />
+        <Body palette={this.state.palette} />
       </>
     )
   }
