@@ -1,6 +1,12 @@
 import React from "react"
 import Header from "./components/functional/Header"
 import Body from "./components/Body"
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
+import LoginForm from "./components/LoginForm"
 
 class App extends React.Component
 {
@@ -31,8 +37,17 @@ class App extends React.Component
   {
     return (
       <>
-        <Header palette={this.state.palette} />
-        <Body palette={this.state.palette} />
+        <Router>
+          <Switch>
+            <Route exac path="/">
+              <LoginForm palette={this.state.palette} />
+            </Route>
+            <Route exac path="/chat">
+              <Header palette={this.state.palette} />
+              <Body palette={this.state.palette} />
+            </Route>
+          </Switch>
+        </Router>
       </>
     )
   }

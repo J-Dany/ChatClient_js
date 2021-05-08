@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 import { w3cwebsocket as WebSocket } from "websocket"
 
-const client = new WebSocket("ws://localhost:61000")
+const client = new WebSocket("ws://localhost:60000")
 
 client.onopen = event =>
 {
