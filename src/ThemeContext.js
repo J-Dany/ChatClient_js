@@ -8,10 +8,10 @@ const primary = {
 }
   
 const secondary = {
-    textColor: "#ffffff",
-    color: "#546e7a",
-    light: "#819ca9",
-    dark: "#29434e"
+    textColor: "#000000",
+    color: "#f5f5f5",
+    light: "#ffffff",
+    dark: "#c2c2c2"
 }
 
 const ThemeContext = React.createContext()

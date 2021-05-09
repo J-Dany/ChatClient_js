@@ -29,11 +29,16 @@ class LoginForm extends React.Component
 
         if (!validatIp(ip))
         {
-            alert("Hai inserito un indirizzo ip non valido")
+            this.setState({
+                ipField: {
+                    error: true,
+                    helperText: "IP non valido"
+                }
+            })
         }
         else
         {
-            alert("Indirizzo ip valido")
+            this.props.setServerIp(ip)
         }
     }
 
@@ -52,7 +57,7 @@ class LoginForm extends React.Component
                     <Box display="flex" justifyContent="center" alignItems="center" style={{height: "100%", width: "100%"}}>
                         <form onSubmit={event => this.handleSubmit(event)} autoComplete="off" style={{width: "100%"}}>
                             <ThemeProvider theme={darkTheme}>
-                                <TextField label="Server IP" id="ip" required autoFocus fullWidth />
+                                <TextField {...this.state.ipField} label="Server IP" id="ip" required autoFocus fullWidth />
                             </ThemeProvider>
                             <Button color="primary" variant="contained" fullWidth className="mt-2" type="submit">Join</Button>
                         </form>
