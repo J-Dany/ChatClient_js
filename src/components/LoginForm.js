@@ -1,9 +1,9 @@
 import React from "react"
-import { TextField, Box, Container, Button, ThemeProvider, createMuiTheme, FormControlLabel, FormGroup } from "@material-ui/core"
+import { TextField, Box, Container, Button, ThemeProvider, createMuiTheme, FormControlLabel, FormGroup, Checkbox } from "@material-ui/core"
 import { lightBlue } from "@material-ui/core/colors"
 import { ThemeContext } from "../ThemeContext"
-import Checkbox from '@material-ui/core/Checkbox'
 import InfoButton from "./functional/InfoButton"
+import loading from "../icons/loading.svg"
 
 function validatIp(ipaddress) 
 {  
@@ -22,17 +22,22 @@ class LoginForm extends React.Component
     constructor(props)
     {
         super(props)
-        this.state = { }
+        this.state = {
+            server: {
+                isConnecting: false
+            }
+        }
     }
 
     handleSubmit(event)
     {
         event.preventDefault()
 
-        const ip = document.getElementById("ip").value
+        const ip = document.getElementById("ip")
+        const port = document.getElementById("port")
         const saveIp = document.getElementById("saveIp").checked
 
-        if (!validatIp(ip))
+        if (ip.value !== "localhost" && !validatIp(ip.value))
         {
             this.setState({
                 ipField: {
@@ -43,12 +48,19 @@ class LoginForm extends React.Component
         }
         else
         {
-            if (saveIp)
+            if (this.props.connect(ip.value))
             {
-                localStorage.setItem("serverIp", ip)
-            }
+                if (saveIp)
+                {
+                    localStorage.setItem("serverIp", ip.value + ":" + port.value)
+                }
 
-            this.props.setServerIp(ip)
+                this.props.setServerIp(ip.value + ":" + port.value)
+            }
+            else
+            {
+                alert("Non sono riuscito a contattare il server")
+            }
         }
     }
 
@@ -60,17 +72,28 @@ class LoginForm extends React.Component
                 primary: lightBlue
             }
         });
-        
-        return (
-            <Box style={{height: "100%", backgroundColor: this.context.palette.dark}}>
-                <Container maxWidth="sm" style={{height: "100%"}}>
-                    <Box display="flex" justifyContent="center" alignItems="center" style={{height: "100%", width: "100%"}}>
+
+        let body = null
+
+        if (this.state.server.isConnecting)
+        {
+            body = <Box display="flex" justifyContent="center" alignItems="center" style={{height: "100%"}}>
+                <img src={loading} alt="loading..." width="32" height="32" />
+            </Box>
+        }
+        else
+        {
+            body =  <Box display="flex" justifyContent="center" alignItems="center" style={{height: "100%", width: "100%"}}>
                         <form onSubmit={event => this.handleSubmit(event)} autoComplete="off" style={{width: "100%"}}>
-                            <FormGroup row={true}>
+                            <div>
                                 <InfoButton />
-                            </FormGroup>
+                            </div>
                             <ThemeProvider theme={darkTheme}>
-                                <TextField {...this.state.ipField} label="Server IP" id="ip" required autoFocus fullWidth />
+                                <Box display="flex">
+                                    <TextField {...this.state.ipField} label="Server IP" id="ip" required autoFocus />
+                                    <div style={{flexGrow: "1"}}></div>
+                                    <TextField {...this.state.ipField} label="Server port" id="port" required autoFocus />
+                                </Box>
                                 <FormControlLabel
                                     control={<Checkbox name="checkedA" id="saveIp" />}
                                     label="Salva questo indirizzo"
@@ -80,6 +103,12 @@ class LoginForm extends React.Component
                             </ThemeProvider>
                         </form>
                     </Box>
+        }
+        
+        return (
+            <Box style={{height: "100%", backgroundColor: this.context.palette.dark}}>
+                <Container maxWidth="sm" style={{height: "100%"}}>
+                    {body}
                 </Container>
             </Box>
         )
