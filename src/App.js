@@ -13,7 +13,7 @@ class App extends React.Component
     super(props)
 
     this.state = {
-      serverIp: null,
+      serverIp: localStorage.getItem("serverIp"),
       theme: primary,
       darkMode: {
         isDarkMode: true,
