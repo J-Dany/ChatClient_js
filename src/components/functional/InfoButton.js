@@ -4,6 +4,7 @@ import { Button, IconButton, Modal, Typography, Box } from "@material-ui/core"
 import { makeStyles } from '@material-ui/core/styles'
 import Fade from '@material-ui/core/Fade'
 import { ThemeContext } from "../../ThemeContext"
+import { lightBlue } from "@material-ui/core/colors"
 
 function InfoButton(props)
 {
@@ -52,9 +53,9 @@ function InfoButton(props)
                     <Typography variant="h6"><strong>Server IP:</strong></Typography>
                     <Typography variant="body1">This value can be either <i>localhost</i> or <i>X.X.X.X</i></Typography>
                     <Typography variant="h6"><strong>Server Port:</strong></Typography>
-                    <Typography variant="body1">A value between 0 and 65536</Typography>
+                    <Typography variant="body1">A value between 1 and 65535</Typography>
                     <Box display="flex" justifyContent="flex-end">
-                        <Button color="primary" onClick={handleClose}>Close</Button>
+                        <Button style={{color: "#03a9f4"}} onClick={handleClose}>Close</Button>
                     </Box>
                 </div>
             </Fade>
