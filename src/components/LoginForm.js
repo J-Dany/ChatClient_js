@@ -1,9 +1,8 @@
 import React from "react"
-import { TextField, Box, Container, Button, ThemeProvider, createMuiTheme, FormControlLabel, FormGroup, Checkbox } from "@material-ui/core"
+import { TextField, Box, Container, Button, ThemeProvider, createMuiTheme, FormControlLabel, Checkbox, Typography } from "@material-ui/core"
 import { lightBlue } from "@material-ui/core/colors"
 import { ThemeContext } from "../ThemeContext"
 import InfoButton from "./functional/InfoButton"
-import loading from "../icons/loading.svg"
 
 function validatIp(ipaddress) 
 {  
@@ -33,6 +32,12 @@ class LoginForm extends React.Component
     {
         event.preventDefault()
 
+        this.setState({
+            server: {
+                isConnecting: true
+            }
+        })
+
         const ip = document.getElementById("ip")
         const port = document.getElementById("port")
         const saveIp = document.getElementById("saveIp").checked
@@ -48,19 +53,28 @@ class LoginForm extends React.Component
         }
         else
         {
-            if (this.props.connect(ip.value))
-            {
-                if (saveIp)
-                {
-                    localStorage.setItem("serverIp", ip.value + ":" + port.value)
-                }
+            this.props.connect(ip.value, port.value)
+                .then(value => {
+                    if (value)
+                    {
+                        if (saveIp)
+                        {
+                            localStorage.setItem("serverIp", ip.value + ":" + port.value)
+                        }
 
-                this.props.setServerIp(ip.value + ":" + port.value)
-            }
-            else
-            {
-                alert("Non sono riuscito a contattare il server")
-            }
+                        this.props.setServerIp(ip.value + ":" + port.value)
+                    }
+                    else
+                    {
+                        alert(`Unable to connect to ${ip.value}:${port.value}`)
+
+                        this.setState({
+                            server: {
+                                isConnecting: false
+                            }
+                        })
+                    }
+                })
         }
     }
 
@@ -78,7 +92,9 @@ class LoginForm extends React.Component
         if (this.state.server.isConnecting)
         {
             body = <Box display="flex" justifyContent="center" alignItems="center" style={{height: "100%"}}>
-                <img src={loading} alt="loading..." width="32" height="32" />
+                <ThemeProvider theme={darkTheme}>
+                    <Typography variant="body1">Loading...</Typography>
+                </ThemeProvider>
             </Box>
         }
         else
@@ -92,11 +108,11 @@ class LoginForm extends React.Component
                                 <Box display="flex">
                                     <TextField {...this.state.ipField} label="Server IP" id="ip" required autoFocus />
                                     <div style={{flexGrow: "1"}}></div>
-                                    <TextField {...this.state.ipField} label="Server port" id="port" required autoFocus />
+                                    <TextField {...this.state.ipField} label="Server port" type="number" id="port" required />
                                 </Box>
                                 <FormControlLabel
-                                    control={<Checkbox name="checkedA" id="saveIp" />}
-                                    label="Salva questo indirizzo"
+                                    control={<Checkbox id="saveIp" />}
+                                    label="Save this address"
                                     className="white-text mt-1 mb-1"
                                 />
                                 <Button color="primary" variant="contained" fullWidth className="mt-2" type="submit">Join</Button>

@@ -5,6 +5,7 @@ import Brightness4Icon from '@material-ui/icons/Brightness4';
 import Body from "./components/Body"
 import LoginForm from "./components/LoginForm"
 import { ThemeContext, primary, secondary } from "./ThemeContext"
+import { w3cwebsocket as WebSocket } from "websocket"
 
 class App extends React.Component
 {
@@ -29,6 +30,21 @@ class App extends React.Component
         serverIp: ip
       }
     )
+  }
+
+  async connectTo(ip, port)
+  {
+    return new Promise((resolve, reject) => {
+      this.socket = new WebSocket(`ws://${ip}:${port}`)
+
+      this.socket.onopen = () => {
+        resolve(true)
+      }
+
+      this.socket.onerror = () => {
+        resolve(false)
+      }
+    })
   }
 
   activeDarkMode()
@@ -66,7 +82,7 @@ class App extends React.Component
       return (
         <>
           <ThemeContext.Provider value={{palette: this.state.theme}}>
-            <LoginForm setServerIp={this.setServerIp.bind(this)} />
+            <LoginForm setServerIp={this.setServerIp.bind(this)} connect={this.connectTo.bind(this)} />
           </ThemeContext.Provider>
         </>
       )

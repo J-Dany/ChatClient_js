@@ -50,8 +50,9 @@ function InfoButton(props)
             <Fade in={open}>
                 <div className={classes.paper}>
                     <h4><strong>Server IP:</strong></h4>
-                    <p>Il formato per l'ip del server è il seguente:</p>
-                    <p><strong>(ip|ddns):(porta)</strong></p>
+                    <p>The format of the Server address is the following:</p>
+                    <p><strong>(ip|ddns):(port)</strong></p>
+                    <p>The ip can also be <i>localhost</i></p>
                 </div>
             </Fade>
         </Modal>
