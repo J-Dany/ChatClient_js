@@ -1,6 +1,6 @@
 import React from "react"
 import InfoIcon from '@material-ui/icons/Info'
-import { IconButton, Modal } from "@material-ui/core"
+import { Button, IconButton, Modal, Typography, Box } from "@material-ui/core"
 import { makeStyles } from '@material-ui/core/styles'
 import Fade from '@material-ui/core/Fade'
 import { ThemeContext } from "../../ThemeContext"
@@ -20,7 +20,7 @@ function InfoButton(props)
         paper: {
             padding: "16px",
             color: "#FFFFFF",
-            backgroundColor: palette.color,
+            backgroundColor: palette.dark,
             border: "1px solid #000000"
         }
     }));
@@ -37,7 +37,7 @@ function InfoButton(props)
 
     return (
         <>
-        <IconButton edge="start" onClick={handleOpen}>
+        <IconButton edge="end" onClick={handleOpen}>
             <InfoIcon />
         </IconButton>
         <Modal
@@ -49,10 +49,13 @@ function InfoButton(props)
         >
             <Fade in={open}>
                 <div className={classes.paper}>
-                    <h4><strong>Server IP:</strong></h4>
-                    <p>The format of the Server address is the following:</p>
-                    <p><strong>(ip|ddns):(port)</strong></p>
-                    <p>The ip can also be <i>localhost</i></p>
+                    <Typography variant="h6"><strong>Server IP:</strong></Typography>
+                    <Typography variant="body1">This value can be either <i>localhost</i> or <i>X.X.X.X</i></Typography>
+                    <Typography variant="h6"><strong>Server Port:</strong></Typography>
+                    <Typography variant="body1">A value between 0 and 65536</Typography>
+                    <Box display="flex" justifyContent="flex-end">
+                        <Button color="primary" onClick={handleClose}>Close</Button>
+                    </Box>
                 </div>
             </Fade>
         </Modal>

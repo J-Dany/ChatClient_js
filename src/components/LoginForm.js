@@ -4,7 +4,7 @@ import { lightBlue } from "@material-ui/core/colors"
 import { ThemeContext } from "../ThemeContext"
 import InfoButton from "./functional/InfoButton"
 
-function validatIp(ipaddress) 
+function validateIp(ipaddress) 
 {  
     if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ipaddress)) 
     {
@@ -42,12 +42,17 @@ class LoginForm extends React.Component
         const port = document.getElementById("port")
         const saveIp = document.getElementById("saveIp").checked
 
-        if (ip.value !== "localhost" && !validatIp(ip.value))
+        console.log(ip.value !== "localhost" && !validateIp(ip.value))
+
+        if (ip.value !== "localhost" && !validateIp(ip.value))
         {
             this.setState({
                 ipField: {
                     error: true,
                     helperText: "IP non valido"
+                },
+                server: {
+                    isConnecting: false
                 }
             })
         }
@@ -101,14 +106,14 @@ class LoginForm extends React.Component
         {
             body =  <Box display="flex" justifyContent="center" alignItems="center" style={{height: "100%", width: "100%"}}>
                         <form onSubmit={event => this.handleSubmit(event)} autoComplete="off" style={{width: "100%"}}>
-                            <div>
+                            <Box display="flex" justifyContent="flex-end">
                                 <InfoButton />
-                            </div>
+                            </Box>
                             <ThemeProvider theme={darkTheme}>
                                 <Box display="flex">
                                     <TextField {...this.state.ipField} label="Server IP" id="ip" required autoFocus />
                                     <div style={{flexGrow: "1"}}></div>
-                                    <TextField {...this.state.ipField} label="Server port" type="number" id="port" required />
+                                    <TextField label="Server port" type="number" id="port" required />
                                 </Box>
                                 <FormControlLabel
                                     control={<Checkbox id="saveIp" />}
