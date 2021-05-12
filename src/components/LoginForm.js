@@ -42,8 +42,6 @@ class LoginForm extends React.Component
         const port = document.getElementById("port")
         const saveIp = document.getElementById("saveIp").checked
 
-        console.log(ip.value !== "localhost" && !validateIp(ip.value))
-
         if (ip.value !== "localhost" && !validateIp(ip.value))
         {
             this.setState({

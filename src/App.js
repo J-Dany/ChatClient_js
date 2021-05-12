@@ -41,6 +41,10 @@ class App extends React.Component
         resolve(true)
       }
 
+      this.socket.onmessage = message => {
+        console.log("Message: " + message.data)
+      }
+
       this.socket.onerror = () => {
         resolve(false)
       }
