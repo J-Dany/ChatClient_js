@@ -10,6 +10,7 @@ class Body extends React.Component
     {
         super(props)
         this.state = { }
+        this.socket = props.socket
     }
 
     render()

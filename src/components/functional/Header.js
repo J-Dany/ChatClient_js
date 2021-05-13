@@ -13,6 +13,9 @@ function Header(props)
                 <IconButton edge="start" onClick={() => props.activeDarkMode()} style={{color: context.palette.textColor}}>
                     {context.darkMode.icon}
                 </IconButton>
+                <IconButton edge="start">
+                    
+                </IconButton>
                 <div style={{flexGrow: "1"}}></div>
                 <IconButton edge="start" aria-label="menu" style={{color: context.palette.textColor}}>
                     <MoreIcon />

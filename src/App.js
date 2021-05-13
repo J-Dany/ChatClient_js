@@ -3,9 +3,11 @@ import Header from "./components/functional/Header"
 import BrightnessHighIcon from '@material-ui/icons/BrightnessHigh';
 import Brightness4Icon from '@material-ui/icons/Brightness4';
 import Body from "./components/Body"
-import LoginForm from "./components/LoginForm"
+import ConnectionForm from "./components/ConnectionForm"
 import { ThemeContext, primary, secondary } from "./ThemeContext"
 import { w3cwebsocket as WebSocket } from "websocket"
+import LoginForm from "./components/LoginForm"
+import Connection from "./Connection"
 
 class App extends React.Component
 {
@@ -15,11 +17,33 @@ class App extends React.Component
 
     this.state = {
       serverIp: localStorage.getItem("serverIp"),
+      isLogged: false,
       theme: primary,
       darkMode: {
         isDarkMode: true,
         icon: <BrightnessHighIcon />
       }
+    }
+  }
+
+  componentDidMount()
+  {
+    if (this.state.serverIp !== null)
+    {
+      let [ip, port] = this.state.serverIp.split(":")
+      this.connectTo(ip, port)
+        .then(value => {
+          if (value)
+          {
+            this.setServerIp(`${ip}:${port}`)
+          }
+
+          this.setState(
+            {
+              serverIp: null
+            }
+          )
+        })
     }
   }
 
@@ -32,17 +56,24 @@ class App extends React.Component
     )
   }
 
+  setIsLogged(value)
+  {
+    this.setState(
+      {
+        isLogged: value
+      }
+    )
+  }
+
   async connectTo(ip, port)
   {
     return new Promise((resolve, reject) => {
       this.socket = new WebSocket(`ws://${ip}:${port}`)
 
+      this.connection = new Connection(this.socket)
+
       this.socket.onopen = () => {
         resolve(true)
-      }
-
-      this.socket.onmessage = message => {
-        console.log("Message: " + message.data)
       }
 
       this.socket.onerror = () => {
@@ -86,16 +117,28 @@ class App extends React.Component
       return (
         <>
           <ThemeContext.Provider value={{palette: this.state.theme}}>
-            <LoginForm setServerIp={this.setServerIp.bind(this)} connect={this.connectTo.bind(this)} />
+            <ConnectionForm setServerIp={this.setServerIp.bind(this)} connect={this.connectTo.bind(this)} />
           </ThemeContext.Provider>
         </>
       )
     }
+    
+    if (!this.state.isLogged)
+    {
+      return (
+        <>
+          <ThemeContext.Provider value={{palette: this.state.theme}}>
+            <LoginForm connection={this.connection} setLogged={this.setIsLogged.bind(this)} />
+          </ThemeContext.Provider>
+        </>
+      )
+    }
+
     return (
       <>
         <ThemeContext.Provider value={{palette: this.state.theme, darkMode: this.state.darkMode}}>
           <Header activeDarkMode={this.activeDarkMode.bind(this)} />
-          <Body />
+          <Body socket={this.socket} />
         </ThemeContext.Provider>
       </>
     )

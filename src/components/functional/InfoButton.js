@@ -4,7 +4,6 @@ import { Button, IconButton, Modal, Typography, Box } from "@material-ui/core"
 import { makeStyles } from '@material-ui/core/styles'
 import Fade from '@material-ui/core/Fade'
 import { ThemeContext } from "../../ThemeContext"
-import { lightBlue } from "@material-ui/core/colors"
 
 function InfoButton(props)
 {
