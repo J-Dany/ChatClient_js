@@ -37,12 +37,16 @@ class App extends React.Component
           {
             this.setServerIp(`${ip}:${port}`)
           }
+          else
+          {
+            this.setState(
+              {
+                serverIp: null
+              }
+            )
+          }
 
-          this.setState(
-            {
-              serverIp: null
-            }
-          )
+          
         })
     }
   }
