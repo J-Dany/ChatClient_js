@@ -25,7 +25,18 @@ class LoginForm extends React.Component
         let username = document.getElementById("username").value
         let password = document.getElementById("password").value
 
-        this.props.connection.loginMessage(username, password)
+        let xml = new XMLHttpRequest()
+        
+        xml.onload = data => {
+            if (xml.status === 200)
+            {
+                let json = JSON.parse(xml.responseText)
+                this.props.connection.loginMessage(username, json.Digest)
+            }
+        }
+
+        xml.open("GET", `https://api.hashify.net/hash/sha256/base64?value=${password}`, true)
+        xml.send()        
     }
 
     render ()
