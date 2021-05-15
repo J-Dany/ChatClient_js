@@ -28,6 +28,11 @@ class LoginForm extends React.Component
         this.props.connection.loginMessage(username, password)
     }
 
+    changeServerAddress()
+    {
+        this.props.removeServerIp()
+    }
+
     render ()
     {
         const darkTheme = createMuiTheme({
@@ -59,7 +64,11 @@ class LoginForm extends React.Component
                             <ThemeProvider theme={darkTheme}>
                                 <TextField type="text" id="username" label="Username" fullWidth />
                                 <TextField type="password" id="password" label="Password" fullWidth className="mt-1" />
-                                <Button variant="contained" type="submit" color="primary" fullWidth className="mt-3">Sign In</Button>
+                                <Box display="flex" flexDirection="row-reverse">
+                                    <Button variant="contained" type="submit" color="primary" className="mt-3">Sign In</Button>
+                                    <div style={{flexGrow: "1"}}></div>
+                                    <Button variant="outlined" type="button" onClick={() => this.changeServerAddress()} color="primary" className="mt-3 mr-2">Change server address</Button>
+                                </Box>                                
                             </ThemeProvider>
                         </form>
                     </Box>

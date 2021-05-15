@@ -77,18 +77,16 @@ class App extends React.Component
       this.connection.setOnMessageCallback(message => {
         let json = JSON.parse(message.data)
 
-        switch (json.Type)
+        if (json.Type === "FOR_LOGIN")
         {
-          case "FOR_LOGIN":
-            if (json.Status)
-            {
-              this.setIsLogged(true)
-            }
-            else
-            {
-              alert("Login failed")
-            }
-          break;
+          if (json.Status)
+          {
+            this.setIsLogged(true)
+          }
+          else
+          {
+            alert("Login failed")
+          }
         }
       })
 
@@ -130,6 +128,15 @@ class App extends React.Component
     }
   }
 
+  deleteServerAddress()
+  {
+    localStorage.removeItem("serverIp")
+
+    this.setState({
+      serverIp: localStorage.getItem("serverIp")
+    })
+  }
+
   render()
   {
     if (this.state.serverIp === null)
@@ -148,7 +155,7 @@ class App extends React.Component
       return (
         <>
           <ThemeContext.Provider value={{palette: this.state.theme}}>
-            <LoginForm connection={this.connection} setLogged={this.setIsLogged.bind(this)} />
+            <LoginForm connection={this.connection} removeServerIp={this.deleteServerAddress.bind(this)} setLogged={this.setIsLogged.bind(this)} />
           </ThemeContext.Provider>
         </>
       )
