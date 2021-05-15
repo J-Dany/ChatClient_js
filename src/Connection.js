@@ -1,14 +1,22 @@
-import { w3cwebsocket as WebSocket } from "websocket"
-
 class Connection
 {
     /**
      * Default constructor
      * @param {WebSocket} socket 
      */
-    constructor (socket)
+    constructor(socket)
     {
         this.socket = socket
+    }
+
+    /**
+     * Sets the callback for the event "onmessage"
+     * 
+     * @param {(message:MessageEvent)} callback
+     */
+    setOnMessageCallback(callback)
+    {
+        this.socket.onmessage = callback
     }
 
     /**
@@ -19,15 +27,27 @@ class Connection
      */
     loginMessage(username, password)
     {
-        this.socket.send(
-            JSON.stringify(
-                {
-                    Type: "FOR_LOGIN",
-                    Sender: username,
-                    Password: password
-                }
-            )
-        )
+        let xml = new XMLHttpRequest()
+        
+        xml.onload = data => {
+            if (xml.status === 200)
+            {
+                let json = JSON.parse(xml.responseText)
+
+                this.socket.send(
+                    JSON.stringify(
+                        {
+                            Type: "FOR_LOGIN",
+                            Sender: username,
+                            Password: json.Digest
+                        }
+                    )
+                )
+            }
+        }
+
+        xml.open("GET", `https://api.hashify.net/hash/sha256/base64?value=${password}`, false)
+        xml.send()
     }
 }
 

@@ -45,8 +45,6 @@ class App extends React.Component
               }
             )
           }
-
-          
         })
     }
   }
@@ -75,6 +73,24 @@ class App extends React.Component
       this.socket = new WebSocket(`ws://${ip}:${port}`)
 
       this.connection = new Connection(this.socket)
+
+      this.connection.setOnMessageCallback(message => {
+        let json = JSON.parse(message.data)
+
+        switch (json.Type)
+        {
+          case "FOR_LOGIN":
+            if (json.Status)
+            {
+              this.setIsLogged(true)
+            }
+            else
+            {
+              alert("Login failed")
+            }
+          break;
+        }
+      })
 
       this.socket.onopen = () => {
         resolve(true)
@@ -142,7 +158,7 @@ class App extends React.Component
       <>
         <ThemeContext.Provider value={{palette: this.state.theme, darkMode: this.state.darkMode}}>
           <Header activeDarkMode={this.activeDarkMode.bind(this)} />
-          <Body socket={this.socket} />
+          <Body connection={this.connection} />
         </ThemeContext.Provider>
       </>
     )
