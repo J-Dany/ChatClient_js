@@ -21,7 +21,7 @@ class Body extends React.Component
 
                 break
                 case "FOR_NEW_CONNECTION":
-                    
+                    console.log("New connection: " + json.Username)
                 break
                 default:
                     console.error(`Can't handle ${json.Type} request`)

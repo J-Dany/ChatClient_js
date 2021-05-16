@@ -11,7 +11,7 @@ function Header(props)
     return (
         <AppBar position="static" style={{backgroundColor: context.palette.dark}}>
             <Toolbar>
-                <IconButton edge="start" style={{color: context.palette.textColor}}>
+                <IconButton edge="start" style={{color: context.palette.textColor}} onClick={() => props.closeConnection()}>
                     <ArrowBackIcon />
                 </IconButton>
                 <div style={{flexGrow: "1"}}></div>

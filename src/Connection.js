@@ -49,6 +49,13 @@ class Connection
         xml.open("GET", `https://api.hashify.net/hash/sha256/base64?value=${password}`, false)
         xml.send()
     }
+
+    closeConnection()
+    {
+        this.socket.send(JSON.stringify({
+            Type: "FOR_CLOSE_CONNECTION"
+        }))
+    }
 }
 
 export default Connection

@@ -60,11 +60,28 @@ class App extends React.Component
 
   setIsLogged(value)
   {
+    localStorage.removeItem("serverIP")
     this.setState(
       {
-        isLogged: value
+        isLogged: value,
+        serverIp: localStorage.getItem("serverIp")
       }
     )
+
+    if (localStorage.getItem("serverIp"))
+    {
+      const [ip, port] = localStorage.getItem("serverIp").split(":")
+
+      this.connectTo(ip, port)
+    }
+  }
+
+  closeConnection()
+  {
+    this.connection.closeConnection()
+    this.setState({
+      isLogged: false
+    })
   }
 
   async connectTo(ip, port)
@@ -73,6 +90,10 @@ class App extends React.Component
       this.socket = new WebSocket(`ws://${ip}:${port}`)
 
       this.connection = new Connection(this.socket)
+
+      window.onclose = () => {
+        this.closeConnection()
+      }
 
       this.connection.setOnMessageCallback(message => {
         let json = JSON.parse(message.data)
@@ -164,7 +185,7 @@ class App extends React.Component
     return (
       <>
         <ThemeContext.Provider value={{palette: this.state.theme, darkMode: this.state.darkMode}}>
-          <Header activeDarkMode={this.activeDarkMode.bind(this)} />
+          <Header activeDarkMode={this.activeDarkMode.bind(this)} closeConnection={this.closeConnection.bind(this)} />
           <Body connection={this.connection} />
         </ThemeContext.Provider>
       </>
