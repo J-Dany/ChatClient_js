@@ -9,7 +9,7 @@ function Header(props)
     const context = useContext(ThemeContext)
 
     return (
-        <AppBar position="static" style={{backgroundColor: context.palette.dark, height: "8%"}}>
+        <AppBar position="static" style={{backgroundColor: context.palette.dark}}>
             <Toolbar>
                 <IconButton edge="start" style={{color: context.palette.textColor}}>
                     <ArrowBackIcon />

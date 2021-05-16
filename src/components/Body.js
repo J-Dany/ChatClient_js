@@ -32,7 +32,7 @@ class Body extends React.Component
     render()
     {
         return (
-            <div style={{backgroundColor: this.context.palette.color, color: this.context.palette.textColor, height: "92%"}}>
+            <div style={{backgroundColor: this.context.palette.color, color: this.context.palette.textColor, height: "100%"}}>
                 <Grid container style={{height: "100%"}}>
                     <Grid item xs={4} md={3} xl={2} style={{height: "100%"}} className="p-3">
                         <Paper elevation={3} style={{backgroundColor: this.context.palette.color, color: this.context.palette.textColor, height: "100%", overflowY: "auto"}}>
