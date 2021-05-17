@@ -55,6 +55,8 @@ class Connection
         this.socket.send(JSON.stringify({
             Type: "FOR_CLOSE_CONNECTION"
         }))
+
+        this.socket.close()
     }
 }
 

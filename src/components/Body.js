@@ -1,6 +1,7 @@
 import React from "react"
 import { Grid, Paper } from "@material-ui/core"
 import { ThemeContext } from "../ThemeContext"
+import ChatElement from "./functional/ChatElement"
 
 class Body extends React.Component
 {
@@ -23,8 +24,21 @@ class Body extends React.Component
                 case "FOR_NEW_CONNECTION":
                     console.log("New connection: " + json.Username)
                 break
+                case "FOR_FRIEND_LIST":
+                    let listFriend = [ ]
+
+                    for (let friend in json.Friends)
+                    {
+                        listFriend.push(<ChatElement friend={json.Friends[friend]} />)
+                    }
+
+                    this.setState({
+                        friends: listFriend
+                    })
+                break
                 default:
                     console.error(`Can't handle ${json.Type} request`)
+                    console.info(json)
             }
         })
     }
@@ -36,12 +50,14 @@ class Body extends React.Component
                 <Grid container style={{height: "100%"}}>
                     <Grid item xs={4} md={3} xl={2} style={{height: "100%"}} className="p-3">
                         <Paper elevation={3} style={{backgroundColor: this.context.palette.color, color: this.context.palette.textColor, height: "100%", overflowY: "auto"}}>
-                            
+                            {this.state.friends
+                            ? this.state.friends
+                            : null}
                         </Paper>
                     </Grid>
                     <Grid item xs={8} md={9} xl={10} style={{height: "100%"}} className="p-3">
                         <Paper elevation={3} style={{backgroundColor: this.context.palette.color, color: this.context.palette.textColor, height: "100%"}} className="p-2">
-
+                            
                         </Paper>
                     </Grid>
                 </Grid>
