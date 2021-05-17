@@ -60,19 +60,29 @@ class App extends React.Component
 
   setIsLogged(value)
   {
-    localStorage.removeItem("serverIP")
-    this.setState(
-      {
-        isLogged: value,
-        serverIp: localStorage.getItem("serverIp")
-      }
-    )
-
-    if (localStorage.getItem("serverIp"))
+    if (value)
     {
-      const [ip, port] = localStorage.getItem("serverIp").split(":")
+      this.setState(
+        {
+          isLogged: true
+        }
+      )
+    }
+    else
+    {
+      localStorage.removeItem("serverIP")
+      this.setState(
+        {
+          isLogged: false
+        }
+      )
 
-      this.connectTo(ip, port)
+      if (localStorage.getItem("serverIp"))
+      {
+        const [ip, port] = localStorage.getItem("serverIp").split(":")
+
+        this.connectTo(ip, port)
+      }
     }
   }
 
