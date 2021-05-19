@@ -1,13 +1,21 @@
 import { Avatar, Grid, Paper, Typography, Box } from "@material-ui/core"
 import React, { useContext } from "react"
 import { ThemeContext } from "../../ThemeContext"
+import Chat from "../Chat"
 
 function ChatElement(props)
 {
     const context = useContext(ThemeContext)
     console.log(props.photo)
+
+    let chat = <Chat name={props.friend} />
+
+    let onClick = () => {
+        props.loadChat(chat)
+    }
+
     return (
-        <Paper elevation={1} style={{backgroundColor: context.palette.color, color: context.palette.textColor, cursor: "pointer", marginBottom: "1px"}} className="p-4">
+        <Paper elevation={1} onClick={() => onClick()} style={{backgroundColor: context.palette.color, color: context.palette.textColor, cursor: "pointer", marginBottom: "1px"}} className="p-4">
             <Grid container>
                 <Grid item xs={3} lg={2}>
                     <Box display="flex" alignItems="center" style={{height: "100%"}}>

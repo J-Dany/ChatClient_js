@@ -8,6 +8,10 @@ class Connection
     {
         this.socket = socket
         this.webServerIp = webServerIp
+
+        this.socket.onerror = event => {
+            console.error(event)
+        }
     }
 
     /**

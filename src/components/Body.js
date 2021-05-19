@@ -31,6 +31,7 @@ class Body extends React.Component
                             online={json.Friends[friend].Online} 
                             lastMessage={json.Friends[friend].LastMessage}
                             photo={`http://${this.connection.getWebServerIp()}/user-images/${json.Friends[friend].Photo}`}
+                            loadChat={this.loadChat.bind(this)}
                         />)
                     }
 
@@ -42,6 +43,13 @@ class Body extends React.Component
                     console.error(`Can't handle ${json.Type} request`)
                     console.info(json)
             }
+        })
+    }
+
+    loadChat(chatComponent)
+    {
+        this.setState({
+            chat: chatComponent
         })
     }
 
@@ -61,7 +69,7 @@ class Body extends React.Component
                     </Grid>
                     <Grid item xs={8} md={9} xl={10} style={{height: "100%"}} className="p-3">
                         <Paper elevation={3} style={{backgroundColor: this.context.palette.color, color: this.context.palette.textColor, height: "100%"}} className="p-2">
-                            
+                            {this.state.chat}
                         </Paper>
                     </Grid>
                 </Grid>
