@@ -4,9 +4,10 @@ class Connection
      * Default constructor
      * @param {WebSocket} socket 
      */
-    constructor(socket)
+    constructor(socket, webServerIp)
     {
         this.socket = socket
+        this.webServerIp = webServerIp
     }
 
     /**
@@ -20,6 +21,16 @@ class Connection
     }
 
     /**
+     * Returns the web server ip
+     * 
+     * @returns string
+     */
+    getWebServerIp()
+    {
+        return this.webServerIp
+    }
+
+    /**
      * Send a login message
      * 
      * @param {string} username 
@@ -27,27 +38,15 @@ class Connection
      */
     loginMessage(username, password)
     {
-        let xml = new XMLHttpRequest()
-        
-        xml.onload = data => {
-            if (xml.status === 200)
-            {
-                let json = JSON.parse(xml.responseText)
-
-                this.socket.send(
-                    JSON.stringify(
-                        {
-                            Type: "FOR_LOGIN",
-                            Sender: username,
-                            Password: json.Digest
-                        }
-                    )
-                )
-            }
-        }
-
-        xml.open("GET", `https://api.hashify.net/hash/sha256/base64?value=${password}`, false)
-        xml.send()
+        this.socket.send(
+            JSON.stringify(
+                {
+                    Type: "FOR_LOGIN",
+                    Sender: username,
+                    Password: password
+                }
+            )
+        )
     }
 
     closeConnection()

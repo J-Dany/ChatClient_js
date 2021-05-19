@@ -41,6 +41,8 @@ class ConnectionForm extends React.Component
         const ip = document.getElementById("ip")
         const port = document.getElementById("port")
         const saveIp = document.getElementById("saveIp").checked
+        const saveIpWebServer = document.getElementById("saveIpWs").checked
+        const webServerIp = document.getElementById("ws_ip")
 
         if (ip.value !== "localhost" && !validateIp(ip.value))
         {
@@ -56,7 +58,7 @@ class ConnectionForm extends React.Component
         }
         else
         {
-            this.props.connect(ip.value, port.value)
+            this.props.connect(ip.value, port.value, webServerIp.value)
                 .then(value => {
                     if (value)
                     {
@@ -65,7 +67,12 @@ class ConnectionForm extends React.Component
                             localStorage.setItem("serverIp", ip.value + ":" + port.value)
                         }
 
-                        this.props.setServerIp(ip.value + ":" + port.value)
+                        if (saveIpWebServer)
+                        {
+                            localStorage.setItem("webServerIp", webServerIp.value)
+                        }
+
+                        this.props.setServerIp(ip.value + ":" + port.value, webServerIp.value)
                     }
                     else
                     {
@@ -108,14 +115,22 @@ class ConnectionForm extends React.Component
                                 <InfoButton />
                             </Box>
                             <ThemeProvider theme={darkTheme}>
-                                <Box display="flex">
+                                <Box display="flex" className="mb-2">
                                     <TextField {...this.state.ipField} label="Server IP" id="ip" required autoFocus />
                                     <div style={{flexGrow: "1"}}></div>
                                     <TextField label="Server port" type="number" id="port" required />
                                 </Box>
+                                <Box>
+                                    <TextField label="Web Server IP" id="ws_ip" required autoFocus fullWidth />
+                                </Box>
                                 <FormControlLabel
                                     control={<Checkbox id="saveIp" />}
-                                    label="Save this address"
+                                    label="Save server address"
+                                    className="white-text mt-1 mb-1"
+                                />
+                                <FormControlLabel
+                                    control={<Checkbox id="saveIpWs" />}
+                                    label="Save web server address"
                                     className="white-text mt-1 mb-1"
                                 />
                                 <Button color="primary" variant="contained" fullWidth className="mt-2" type="submit">Join</Button>

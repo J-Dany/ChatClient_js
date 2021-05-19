@@ -17,6 +17,7 @@ class App extends React.Component
 
     this.state = {
       serverIp: localStorage.getItem("serverIp"),
+      webServerIp: localStorage.getItem("webServerIp"),
       isLogged: false,
       theme: primary,
       darkMode: {
@@ -31,11 +32,13 @@ class App extends React.Component
     if (this.state.serverIp !== null)
     {
       let [ip, port] = this.state.serverIp.split(":")
-      this.connectTo(ip, port)
+      let wsIp = this.state.webServerIp
+
+      this.connectTo(ip, port, wsIp)
         .then(value => {
           if (value)
           {
-            this.setServerIp(`${ip}:${port}`)
+            this.setIps(`${ip}:${port}`, wsIp)
           }
           else
           {
@@ -49,11 +52,12 @@ class App extends React.Component
     }
   }
 
-  setServerIp(ip)
+  setIps(serverIp, webServerIp)
   {
     this.setState(
       {
-        serverIp: ip
+        serverIp: serverIp,
+        webServerIp: webServerIp
       }
     )
   }
@@ -94,12 +98,12 @@ class App extends React.Component
     })
   }
 
-  async connectTo(ip, port)
+  async connectTo(ip, port, wsIp)
   {
     return new Promise((resolve, reject) => {
       this.socket = new WebSocket(`ws://${ip}:${port}`)
 
-      this.connection = new Connection(this.socket)
+      this.connection = new Connection(this.socket, wsIp)
 
       window.onclose = () => {
         this.closeConnection()
@@ -175,7 +179,7 @@ class App extends React.Component
       return (
         <>
           <ThemeContext.Provider value={{palette: this.state.theme}}>
-            <ConnectionForm setServerIp={this.setServerIp.bind(this)} connect={this.connectTo.bind(this)} />
+            <ConnectionForm setServerIp={this.setIps.bind(this)} connect={this.connectTo.bind(this)} />
           </ThemeContext.Provider>
         </>
       )

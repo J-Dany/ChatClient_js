@@ -63,7 +63,7 @@ class LoginForm extends React.Component
                         <form method="POST" onSubmit={event => this.handleSubmit(event)}>
                             <ThemeProvider theme={darkTheme}>
                                 <TextField type="text" id="username" label="Username" fullWidth />
-                                <TextField type="password" id="password" label="Password" fullWidth className="mt-1" />
+                                <TextField type="password" id="password" label="Password" fullWidth className="mt-2" />
                                 <Box display="flex" flexDirection="row-reverse">
                                     <Button variant="contained" type="submit" color="primary" className="mt-3">Sign In</Button>
                                     <div style={{flexGrow: "1"}}></div>

@@ -5,21 +5,25 @@ import { ThemeContext } from "../../ThemeContext"
 function ChatElement(props)
 {
     const context = useContext(ThemeContext)
-
+    console.log(props.photo)
     return (
-        <Paper elevation={1} style={{backgroundColor: context.palette.color, color: context.palette.textColor, cursor: "pointer"}} className="p-4">
+        <Paper elevation={1} style={{backgroundColor: context.palette.color, color: context.palette.textColor, cursor: "pointer", marginBottom: "1px"}} className="p-4">
             <Grid container>
                 <Grid item xs={3} lg={2}>
                     <Box display="flex" alignItems="center" style={{height: "100%"}}>
-                        <Avatar src="" />
+                        <Avatar src={props.photo} />
                     </Box>
                 </Grid>
                 <Grid item xs={7} lg={8}>
                     <Typography variant="h5">{props.friend}</Typography>
-                    <small>Placeholder</small>
+                    <small>{props.lastMessage}</small>
                 </Grid>
                 <Grid item xs={1}>
-
+                    {
+                        props.online
+                        ? <Box display="flex" alignItems="center" style={{height: "100%"}}><div style={{borderRadius: "50%", width: "12px", height: "12px", backgroundColor: "green"}}></div></Box>
+                        : null
+                    }
                 </Grid>
             </Grid>
         </Paper>
