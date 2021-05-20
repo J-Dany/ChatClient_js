@@ -15,28 +15,47 @@ class Body extends React.Component
 
         this.connection.setOnMessageCallback(message => {
             let json = JSON.parse(message.data)
+            console.log(json)
 
             switch (json.Type)
             {
                 case "FOR_PRIVATE":
+                    
+                break
+                case "FOR_NEW_CONNECTION":
+                    let onlineRef = this.state.refs[json.Username].onlineCircle.current
 
+                    onlineRef.style.backgroundColor = "green"
                 break
                 case "FOR_FRIEND_LIST":
                     let listFriend = [ ]
+                    let refs = { }
 
                     for (let friend in json.Friends)
                     {
+                        let lastMessage = React.createRef()
+                        let onlineCircle = React.createRef()
+
+                        refs[json.Friends[friend].Name] = {
+                            lastMessage: lastMessage,
+                            onlineCircle: onlineCircle
+                        }
+
                         listFriend.push(<ChatElement
                             friend={json.Friends[friend].Name} 
                             online={json.Friends[friend].Online} 
                             lastMessage={json.Friends[friend].LastMessage}
                             photo={`http://${this.connection.getWebServerIp()}/user-images/${json.Friends[friend].Photo}`}
                             loadChat={this.loadChat.bind(this)}
+                            connection={this.connection}
+                            lastMessageRef={lastMessage}
+                            onlineCircleRef={onlineCircle}
                         />)
                     }
 
                     this.setState({
-                        friends: listFriend
+                        friends: listFriend,
+                        refs: refs
                     })
                 break
                 default:

@@ -15,6 +15,22 @@ class Connection
     }
 
     /**
+     * Send a message to a friend
+     * 
+     * @param {string} friend
+     * @param {string} message
+     */
+    sendToFriend(friend, message)
+    {
+        this.socket.send(JSON.stringify({
+            Type: "FOR_PRIVATE",
+            Sender: localStorage.getItem("username"),
+            Addresse: friend,
+            Data: new Date().toDateString()
+        }))
+    }
+
+    /**
      * Sets the callback for the event "onmessage"
      * 
      * @param {(message:MessageEvent)} callback

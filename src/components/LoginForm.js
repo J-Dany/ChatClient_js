@@ -24,6 +24,8 @@ class LoginForm extends React.Component
 
         let username = document.getElementById("username").value
         let password = document.getElementById("password").value
+
+        localStorage.setItem("username", username)
         
         this.props.connection.loginMessage(username, password)
     }
@@ -35,6 +37,8 @@ class LoginForm extends React.Component
 
     render ()
     {
+        localStorage.removeItem("username")
+        
         const darkTheme = createMuiTheme({
             palette: {
                 type: "dark",
