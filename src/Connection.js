@@ -22,11 +22,12 @@ class Connection
      */
     sendToFriend(friend, message)
     {
+        let dateTime = new Date()
         this.socket.send(JSON.stringify({
             Type: "FOR_PRIVATE",
-            Sender: localStorage.getItem("username"),
             Addresse: friend,
-            Data: new Date().toDateString()
+            Message: message,
+            Data: `${dateTime.getFullYear()}-${dateTime.getMonth() < 10 ? "0" + dateTime.getMonth() : dateTime.getMonth()}-${dateTime.getDay() < 10 ? "0" + dateTime.getDay() : dateTime.getDay()} ${dateTime.getHours() < 10 ? "0" + dateTime.getHours() : dateTime.getHours()}:${dateTime.getMinutes() < 10 ? "0" + dateTime.getMinutes() : dateTime.getMinutes()}:${dateTime.getSeconds() < 10 ? "0" + dateTime.getSeconds() : dateTime.getSeconds()}`
         }))
     }
 

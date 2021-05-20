@@ -20,7 +20,9 @@ class Body extends React.Component
             switch (json.Type)
             {
                 case "FOR_PRIVATE":
-                    
+                    let lastMessageRef = this.state.refs[json.Sender].lastMessage.current
+
+                    lastMessageRef.innerHTML = json.Message
                 break
                 case "FOR_NEW_CONNECTION":
                     let onlineRef = this.state.refs[json.Username].onlineCircle.current
