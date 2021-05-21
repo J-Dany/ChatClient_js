@@ -52,6 +52,8 @@ class Body extends React.Component
                             connection={this.connection}
                             lastMessageRef={lastMessage}
                             onlineCircleRef={onlineCircle}
+                            friendId={json.Friends[friend].IdFriend}
+                            groupId={json.Friends[friend].IdGroup}
                         />)
                     }
 

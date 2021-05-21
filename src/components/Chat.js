@@ -15,10 +15,15 @@ class Chat extends React.Component
             isFriend: props.isFriend,
             isGroup: props.isGroup,
             friendName: props.friendName,
-            groupName: props.groupName
+            groupName: props.groupName,
+            lastMessages: {
+                isLoading: true
+            }
         }
 
         this.connection = props.connection
+
+        this.loadLastMessage()
     }
 
     sendMessage()
@@ -38,12 +43,21 @@ class Chat extends React.Component
         }
     }
 
+    loadLastMessage()
+    {
+        
+    }
+
     render()
     {
         return (
-            <Box display="flex" className="h-100">
+            <Box display="flex" flexDirection="column" className="h-100">
                 <Box display="flex" className="mb-2">
-                    
+                    {
+                        this.state.lastMessages.isLoading
+                        ? "Loading..."
+                        : this.state.lastMessages.messages.map(value => value)
+                    }
                 </Box>
                 <Grid container className="mt-auto w-100" >
                     <Grid item md={11}>

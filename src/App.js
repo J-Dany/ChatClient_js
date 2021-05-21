@@ -117,6 +117,7 @@ class App extends React.Component
           if (json.Status)
           {
             this.setIsLogged(true)
+            localStorage.setItem("id", json.Id)
           }
           else
           {

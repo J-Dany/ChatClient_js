@@ -13,6 +13,8 @@ function ChatElement(props)
         isFriend={props.friend !== undefined ? true : false} 
         isGroup={props.group !== undefined ? true : false} 
         connection={props.connection}
+        idFriend={props.friendId}
+        idGroup={props.groupId}
     />
 
     let onClick = () => {
