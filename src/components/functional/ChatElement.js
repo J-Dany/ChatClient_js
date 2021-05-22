@@ -1,24 +1,13 @@
 import { Avatar, Grid, Paper, Typography, Box } from "@material-ui/core"
 import React, { useContext } from "react"
 import { ThemeContext } from "../../ThemeContext"
-import Chat from "../Chat"
 
 function ChatElement(props)
 {
     const context = useContext(ThemeContext)
 
-    let chat = <Chat
-        friendName={props.friend} 
-        groupName={props.group} 
-        isFriend={props.friend !== undefined ? true : false} 
-        isGroup={props.group !== undefined ? true : false} 
-        connection={props.connection}
-        idFriend={props.friendId}
-        idGroup={props.groupId}
-    />
-
     let onClick = () => {
-        props.loadChat(chat)
+        props.loadChat(props.chat)
     }
 
     let styleOnlineCircle = props.online

@@ -2,6 +2,7 @@ import React from "react"
 import { Grid, Paper } from "@material-ui/core"
 import { ThemeContext } from "../ThemeContext"
 import ChatElement from "./functional/ChatElement"
+import Chat from "./Chat"
 
 class Body extends React.Component
 {
@@ -22,6 +23,17 @@ class Body extends React.Component
                 case "FOR_PRIVATE":
                     let lastMessageRef = this.state.refs[json.Sender].lastMessage.current
 
+                    Notification.requestPermission()
+                        .then(value => {
+                            let n = new Notification(json.Sender, {
+                                body: json.Message
+                            })
+
+                            n.close()
+                        })
+
+                    console.log(this.state.refs[json.Sender].chat.current.props)
+
                     lastMessageRef.innerHTML = json.Message
                 break
                 case "FOR_NEW_CONNECTION":
@@ -37,23 +49,34 @@ class Body extends React.Component
                     {
                         let lastMessage = React.createRef()
                         let onlineCircle = React.createRef()
+                        let chatRef = React.createRef()
+
+                        let chat = <Chat
+                            friendName={json.Friends[friend].Name} 
+                            groupName={""}
+                            isFriend={json.Friends[friend].Name !== undefined ? true : false} 
+                            isGroup={false} 
+                            connection={this.connection}
+                            ref={chatRef}
+                            idFriend={parseInt(json.Friends[friend].IdFriend)}
+                            idGroup={parseInt(json.Friends[friend].IdGroup)}
+                        />
 
                         refs[json.Friends[friend].Name] = {
                             lastMessage: lastMessage,
-                            onlineCircle: onlineCircle
+                            onlineCircle: onlineCircle,
+                            chat: chatRef
                         }
 
                         listFriend.push(<ChatElement
-                            friend={json.Friends[friend].Name} 
+                            friend={json.Friends[friend].Name}
                             online={json.Friends[friend].Online} 
                             lastMessage={json.Friends[friend].LastMessage}
                             photo={`http://${this.connection.getWebServerIp()}/user-images/${json.Friends[friend].Photo}`}
                             loadChat={this.loadChat.bind(this)}
-                            connection={this.connection}
+                            chat={chat}
                             lastMessageRef={lastMessage}
                             onlineCircleRef={onlineCircle}
-                            friendId={json.Friends[friend].IdFriend}
-                            groupId={json.Friends[friend].IdGroup}
                         />)
                     }
 
@@ -69,6 +92,9 @@ class Body extends React.Component
         })
     }
 
+    /**
+     * @param {Chat} chatComponent 
+     */
     loadChat(chatComponent)
     {
         this.setState({
