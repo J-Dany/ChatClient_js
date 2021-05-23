@@ -93,7 +93,7 @@ class Chat extends React.Component
     {
         return (
             <Box display="flex" flexDirection="column" className="h-100">
-                <Box display="flex" flexDirection="column" className="mb-2 w-100 " style={{overflowY: 'scroll'}}>
+                <Box display="flex" flexDirection="column" className="mb-2 w-100 " style={{overflowY: 'auto'}}>
                     <MessageList messages={this.props.messages} />
                 </Box>
                 <Grid container className="mt-auto w-100 p-1" >
