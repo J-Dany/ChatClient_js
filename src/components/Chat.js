@@ -2,7 +2,7 @@ import { TextField, Box, IconButton, Grid, Typography } from "@material-ui/core"
 import React from "react"
 import { ThemeContext } from "../ThemeContext"
 import SendIcon from '@material-ui/icons/Send'
-import Message from "./functional/Message"
+import MessageList from "./functional/MessageList"
 
 class Chat extends React.Component
 {
@@ -32,14 +32,23 @@ class Chat extends React.Component
 
     sendMessage()
     {
-        let message = document.getElementById("textMessage").value
+        let message = document.getElementById("textMessage")
 
         if (this.state.isFriend)
         {
-            this.connection.sendToFriend(
+            let mes = this.connection.sendToFriend(
                 this.state.friendName,
-                message
+                message.value
             )
+
+            message.value = ""
+            message.focus()
+
+            this.props.updateMessages(this.state.friendName, this.state.groupName, {
+                data: mes.Data,
+                message: mes.Message,
+                isFriendSender: false
+            })
         }
         else if (this.state.isGroup)
         {
@@ -56,12 +65,23 @@ class Chat extends React.Component
         xml.onload = data => {
             if (xml.status === 200)
             {
-                this.setState({
-                    lastMessages: {
-                        isLoading: false,
-                        messages: JSON.parse(xml.responseText)
+                let json = JSON.parse(xml.responseText)
+
+                for (let j in json)
+                {
+                    console.log(json[j])
+                    let message = {
+                        message: json[j].message,
+                        data: json[j].data,
+                        isFriendSender: json[j].sender.idUser === parseInt(this.props.idFriend)
+                            ? true
+                            : false
                     }
-                })
+
+                    console.log(message)
+
+                    this.props.updateMessages(this.state.friendName, this.state.groupName, message)
+                }
             }
         }
 
@@ -73,29 +93,25 @@ class Chat extends React.Component
     {
         return (
             <Box display="flex" flexDirection="column" className="h-100">
-                <Box display="flex" flexDirection="column" className="mb-2 w-100">
-                    {
-                        this.state.lastMessages.isLoading
-                        ? "Loading..."
-                        : this.state.lastMessages.messages.map(value => {
-                            if (value.sender.idUser === this.props.idFriend)
-                            {
-                                return <Box display="flex" justifyContent="flex-start" className="w-100 p-2">
-                                    <Message message={value.message} data={value.data} />
-                                </Box>
-                            }
-                            else if (value.sender.idUser === parseInt(localStorage.getItem('id')))
-                            {
-                                return <Box display="flex" justifyContent="flex-end" className="w-100 p-2">
-                                    <Message message={value.message} data={value.data} />
-                                </Box>
-                            }
-                        })
-                    }
+                <Box display="flex" flexDirection="column" className="mb-2 w-100 " style={{overflowY: 'scroll'}}>
+                    <MessageList messages={this.props.messages} />
                 </Box>
-                <Grid container className="mt-auto w-100" >
+                <Grid container className="mt-auto w-100 p-1" >
                     <Grid item xs={10} md={11}>
-                        <TextField fullWidth autoFocus variant="outlined" autoComplete="off" id="textMessage" />
+                        <TextField 
+                            fullWidth 
+                            autoFocus 
+                            variant="outlined" 
+                            autoComplete="off" 
+                            id="textMessage"
+                            inputProps={
+                                {
+                                    style: {
+                                        color: this.props.palette.textColor
+                                    }
+                                }
+                            }
+                        />
                     </Grid>
                     <Grid item xs={2} md={1}>
                         <IconButton className="w-100" edge="end" style={{color: this.context.palette.textColor}} onClick={() => this.sendMessage()}>

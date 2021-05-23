@@ -16,12 +16,13 @@ class Body extends React.Component
 
         this.connection.setOnMessageCallback(message => {
             let json = JSON.parse(message.data)
-            console.log(json)
 
             switch (json.Type)
             {
                 case "FOR_PRIVATE":
                     let lastMessageRef = this.state.refs[json.Sender].lastMessage.current
+
+                    console.log(json)
 
                     Notification.requestPermission()
                         .then(value => {
@@ -32,14 +33,23 @@ class Body extends React.Component
                             n.close()
                         })
 
-                    console.log(this.state.refs[json.Sender].chat.current.props)
+                    this.updateMessages(json.Sender, null, {
+                        message: json.Message,
+                        data: json.Data,
+                        isFriendSender: true
+                    })
 
                     lastMessageRef.innerHTML = json.Message
                 break
-                case "FOR_NEW_CONNECTION":
+                case "FOR_DISCONNECTION":
                     let onlineRef = this.state.refs[json.Username].onlineCircle.current
 
-                    onlineRef.style.backgroundColor = "green"
+                    onlineRef.style.backgroundColor = ""
+                break
+                case "FOR_NEW_CONNECTION":
+                    let oR = this.state.refs[json.Username].onlineCircle.current
+
+                    oR.style.backgroundColor = "green"
                 break
                 case "FOR_FRIEND_LIST":
                     let listFriend = [ ]
@@ -49,34 +59,26 @@ class Body extends React.Component
                     {
                         let lastMessage = React.createRef()
                         let onlineCircle = React.createRef()
-                        let chatRef = React.createRef()
-
-                        let chat = <Chat
-                            friendName={json.Friends[friend].Name} 
-                            groupName={""}
-                            isFriend={json.Friends[friend].Name !== undefined ? true : false} 
-                            isGroup={false} 
-                            connection={this.connection}
-                            ref={chatRef}
-                            idFriend={parseInt(json.Friends[friend].IdFriend)}
-                            idGroup={parseInt(json.Friends[friend].IdGroup)}
-                        />
+                        let messages = [ ]
 
                         refs[json.Friends[friend].Name] = {
                             lastMessage: lastMessage,
                             onlineCircle: onlineCircle,
-                            chat: chatRef
+                            messages: messages,
+                            idFriend: parseInt(json.Friends[friend].IdFriend),
+                            friendName: json.Friends[friend].Name
                         }
 
                         listFriend.push(<ChatElement
                             friend={json.Friends[friend].Name}
-                            online={json.Friends[friend].Online} 
+                            online={json.Friends[friend].Online}
                             lastMessage={json.Friends[friend].LastMessage}
                             photo={`http://${this.connection.getWebServerIp()}/user-images/${json.Friends[friend].Photo}`}
                             loadChat={this.loadChat.bind(this)}
-                            chat={chat}
                             lastMessageRef={lastMessage}
                             onlineCircleRef={onlineCircle}
+                            idFriend={parseInt(json.Friends[friend].IdFriend)}
+                            idGroup={parseInt(json.Friends[friend].IdGroup)}
                         />)
                     }
 
@@ -93,12 +95,35 @@ class Body extends React.Component
     }
 
     /**
+     * @param {string} friendName
+     * @param {string} groupName
+     * @param {Object} message
+     */
+    updateMessages(friendName, groupName, message)
+    {
+        this.state.refs[friendName].messages.push(message)
+
+        this.setState(prevState => {
+            return ({
+                messages: prevState.refs[friendName].messages
+            })
+        })
+    }
+
+    /**
      * @param {Chat} chatComponent 
      */
-    loadChat(chatComponent)
+    loadChat(idFriend, idGroup, friendName, groupName)
     {
-        this.setState({
-            chat: chatComponent
+        this.setState(prevState => {
+            return ({
+                loadChat: true,
+                friendName: friendName,
+                groupName: groupName,
+                idFriend: idFriend,
+                idGroup: idGroup,
+                messages: prevState.refs[friendName].messages
+            })
         })
     }
 
@@ -118,7 +143,22 @@ class Body extends React.Component
                     </Grid>
                     <Grid item xs={8} md={9} xl={10} style={{height: "100%"}} className="p-3">
                         <Paper elevation={3} style={{backgroundColor: this.context.palette.color, color: this.context.palette.textColor, height: "100%"}} className="p-2">
-                            {this.state.chat}
+                            {
+                                this.state.loadChat
+                                ? <Chat
+                                    palette={this.context.palette}
+                                    messages={this.state.messages}
+                                    updateMessages={this.updateMessages.bind(this)}
+                                    connection={this.connection}
+                                    idFriend={this.state.idFriend}
+                                    idGroup={this.state.idGroup}
+                                    isGroup={this.state.idGroup ? true : false}
+                                    isFriend={this.state.idFriend ? true : false}
+                                    friendName={this.state.friendName}
+                                    groupName={this.state.groupName}
+                                />
+                                : null
+                            }
                         </Paper>
                     </Grid>
                 </Grid>

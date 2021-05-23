@@ -3,12 +3,12 @@ import React from "react"
 
 function Message(props)
 {
-    return (<div className="shadow rounded p-1 w-50">
+    return (<div className="shadow rounded w-50 mb-1">
         <div className="p-1">
             <Typography variant="body1">{props.message}</Typography>
         </div>
         <div className="p-1">
-            <Typography variant="body2">{props.data}</Typography>
+            <Typography variant="caption">{props.data}</Typography>
         </div>
     </div>)
 }

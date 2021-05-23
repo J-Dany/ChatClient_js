@@ -7,7 +7,7 @@ function ChatElement(props)
     const context = useContext(ThemeContext)
 
     let onClick = () => {
-        props.loadChat(props.chat)
+        props.loadChat(props.idFriend, props.idGroup, props.friend, props.group)
     }
 
     let styleOnlineCircle = props.online
