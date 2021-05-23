@@ -4,16 +4,6 @@ import { lightBlue } from "@material-ui/core/colors"
 import { ThemeContext } from "../ThemeContext"
 import InfoButton from "./functional/InfoButton"
 
-function validateIp(ipaddress) 
-{  
-    if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ipaddress)) 
-    {
-        return true
-    }
-
-    return false
-}
-
 class ConnectionForm extends React.Component
 {
     static contextType = ThemeContext
@@ -44,48 +34,33 @@ class ConnectionForm extends React.Component
         const saveIpWebServer = document.getElementById("saveIpWs").checked
         const webServerIp = document.getElementById("ws_ip")
 
-        if (ip.value !== "localhost" && !validateIp(ip.value))
-        {
-            this.setState({
-                ipField: {
-                    error: true,
-                    helperText: "IP non valido"
-                },
-                server: {
-                    isConnecting: false
+        this.props.connect(ip.value, port.value, webServerIp.value)
+            .then(value => {
+                if (value)
+                {
+                    if (saveIp)
+                    {
+                        localStorage.setItem("serverIp", ip.value + ":" + port.value)
+                    }
+
+                    if (saveIpWebServer)
+                    {
+                        localStorage.setItem("webServerIp", webServerIp.value)
+                    }
+
+                    this.props.setServerIp(ip.value + ":" + port.value, webServerIp.value)
+                }
+                else
+                {
+                    alert(`Unable to connect to ${ip.value}:${port.value}`)
+
+                    this.setState({
+                        server: {
+                            isConnecting: false
+                        }
+                    })
                 }
             })
-        }
-        else
-        {
-            this.props.connect(ip.value, port.value, webServerIp.value)
-                .then(value => {
-                    if (value)
-                    {
-                        if (saveIp)
-                        {
-                            localStorage.setItem("serverIp", ip.value + ":" + port.value)
-                        }
-
-                        if (saveIpWebServer)
-                        {
-                            localStorage.setItem("webServerIp", webServerIp.value)
-                        }
-
-                        this.props.setServerIp(ip.value + ":" + port.value, webServerIp.value)
-                    }
-                    else
-                    {
-                        alert(`Unable to connect to ${ip.value}:${port.value}`)
-
-                        this.setState({
-                            server: {
-                                isConnecting: false
-                            }
-                        })
-                    }
-                })
-        }
     }
 
     render()

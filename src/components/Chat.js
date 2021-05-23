@@ -1,4 +1,4 @@
-import { TextField, Box, IconButton, Grid, Typography } from "@material-ui/core"
+import { TextField, Box, IconButton, Grid } from "@material-ui/core"
 import React from "react"
 import { ThemeContext } from "../ThemeContext"
 import SendIcon from '@material-ui/icons/Send'
