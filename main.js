@@ -29,8 +29,6 @@ function createWindow() {
     mainWindow.maximize();
     mainWindow.removeMenu();
 
-    mainWindow.webContents.openDevTools();
-
     mainWindow.loadURL("http://localhost:61000/");
 
     // Emitted when the window is closed.
