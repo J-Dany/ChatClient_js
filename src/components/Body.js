@@ -22,8 +22,6 @@ class Body extends React.Component
                 case "FOR_PRIVATE":
                     let lastMessageRef = this.state.refs[json.Sender].lastMessage.current
 
-                    console.log(json)
-
                     Notification.requestPermission()
                         .then(value => {
                             let n = new Notification(json.Sender, {
@@ -104,25 +102,29 @@ class Body extends React.Component
         this.state.refs[friendName].messages.push(message)
 
         this.setState(prevState => {
-            return ({
-                messages: prevState.refs[friendName].messages
-            })
+            return {
+                refs: prevState.refs
+            }
         })
     }
 
-    /**
-     * @param {Chat} chatComponent 
-     */
     loadChat(idFriend, idGroup, friendName, groupName)
     {
         this.setState(prevState => {
             return ({
                 loadChat: true,
-                friendName: friendName,
-                groupName: groupName,
-                idFriend: idFriend,
-                idGroup: idGroup,
-                messages: prevState.refs[friendName].messages
+                chat: <Chat
+                    palette={this.context.palette}
+                    messages={prevState.refs[friendName || groupName].messages}
+                    updateMessages={this.updateMessages.bind(this)}
+                    connection={this.connection}
+                    idFriend={idFriend}
+                    idGroup={idGroup}
+                    isGroup={idGroup ? true : false}
+                    isFriend={idFriend ? true : false}
+                    friendName={friendName}
+                    groupName={groupName}
+                />
             })
         })
     }
@@ -145,18 +147,7 @@ class Body extends React.Component
                         <Paper elevation={3} style={{backgroundColor: this.context.palette.color, color: this.context.palette.textColor, height: "100%"}} className="p-2">
                             {
                                 this.state.loadChat
-                                ? <Chat
-                                    palette={this.context.palette}
-                                    messages={this.state.messages}
-                                    updateMessages={this.updateMessages.bind(this)}
-                                    connection={this.connection}
-                                    idFriend={this.state.idFriend}
-                                    idGroup={this.state.idGroup}
-                                    isGroup={this.state.idGroup ? true : false}
-                                    isFriend={this.state.idFriend ? true : false}
-                                    friendName={this.state.friendName}
-                                    groupName={this.state.groupName}
-                                />
+                                ? this.state.chat
                                 : null
                             }
                         </Paper>

@@ -34,23 +34,23 @@ class Chat extends React.Component
     {
         let message = document.getElementById("textMessage")
 
-        if (this.state.isFriend)
+        if (this.props.isFriend)
         {
             let mes = this.connection.sendToFriend(
-                this.state.friendName,
+                this.props.friendName,
                 message.value
             )
 
             message.value = ""
             message.focus()
 
-            this.props.updateMessages(this.state.friendName, this.state.groupName, {
+            this.props.updateMessages(this.props.friendName, this.props.groupName, {
                 data: mes.Data,
                 message: mes.Message,
                 isFriendSender: false
             })
         }
-        else if (this.state.isGroup)
+        else if (this.props.isGroup)
         {
 
         }
@@ -69,7 +69,6 @@ class Chat extends React.Component
 
                 for (let j in json)
                 {
-                    console.log(json[j])
                     let message = {
                         message: json[j].message,
                         data: json[j].data,
@@ -77,8 +76,6 @@ class Chat extends React.Component
                             ? true
                             : false
                     }
-
-                    console.log(message)
 
                     this.props.updateMessages(this.state.friendName, this.state.groupName, message)
                 }
