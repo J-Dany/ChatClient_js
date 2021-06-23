@@ -2,7 +2,13 @@
   "name": "chat_client",
   "homepage": "./",
   "version": "0.1.0",
-  "main": "main.js",
+  "main": "electron.js",
+  "build": {
+    "asar": false,
+    "directories": {
+      "output": "That!"
+    }
+  },
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.4",
@@ -10,12 +16,14 @@
     "@testing-library/jest-dom": "^5.12.0",
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^12.8.3",
+    "axios": "^0.21.1",
     "bootstrap": "^5.0.0",
     "express": "^4.17.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
     "serve-static": "^1.14.1",
+    "uuid": "^8.3.2",
     "web-vitals": "^1.1.1",
     "websocket": "^1.0.34"
   },
@@ -26,7 +34,7 @@
     "eject": "react-scripts eject",
     "electron": "electron .",
     "electron-packager-help": "electron-packager --help",
-    "make": "electron-packager . --ignore=README.md --ignore=public --ignore=.gitignore --ignore=chat_client* --ignore=images --icon=public/favicon.ico --overwrite --platform=linux --arch=x64"
+    "make": "electron-builder"
   },
   "eslintConfig": {
     "extends": [
@@ -48,7 +56,8 @@
   },
   "devDependencies": {
     "electron": "^12.0.9",
-    "electron-cli": "^0.2.8",
+    "electron-builder": "^22.11.7",
+    "electron-cli": "^0.0.1",
     "electron-forge": "^5.2.4",
     "electron-packager": "^15.2.0"
   }

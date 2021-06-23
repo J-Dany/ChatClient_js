@@ -1,8 +1,10 @@
 import React from "react"
-import { Grid, Paper } from "@material-ui/core"
+import { Grid, Paper, Typography } from "@material-ui/core"
 import { ThemeContext } from "../ThemeContext"
 import ChatElement from "./functional/ChatElement"
 import Chat from "./Chat"
+import ThatModal from "./functional/ThatModal"
+import { v1 as uuidv1 } from 'uuid'
 
 class Body extends React.Component
 {
@@ -11,10 +13,12 @@ class Body extends React.Component
     constructor(props)
     {
         super(props)
-        this.state = { }
-        this.connection = props.connection
+        this.state = {
+            loadChat: false,
+            chat: null
+        }
 
-        this.connection.setOnMessageCallback(message => {
+        this.props.connection.setOnMessageCallback(message => {
             let json = JSON.parse(message.data)
 
             switch (json.Type)
@@ -31,11 +35,15 @@ class Body extends React.Component
                             n.close()
                         })
 
-                    this.updateMessages(json.Sender, null, {
-                        message: json.Message,
-                        data: json.Data,
-                        isFriendSender: true
-                    })
+                    if (this.state.refs[json.Sender].chatRef.current)
+                    {
+                        this.state.refs[json.Sender].chatRef.current.updateMessages({
+                            message: json.Message,
+                            data: json.Data,
+                            isFriendSender: true
+                        })
+                    }
+                    
 
                     lastMessageRef.innerHTML = json.Message
                 break
@@ -49,34 +57,52 @@ class Body extends React.Component
 
                     oR.style.backgroundColor = "green"
                 break
+                case "FOR_SERVER_CLOSING":
+                    this.setState({
+                        isServerClosing: true
+                    })
+                break
                 case "FOR_FRIEND_LIST":
                     let listFriend = [ ]
                     let refs = { }
 
-                    for (let friend in json.Friends)
+                    for (let friend of json.Friends)
                     {
                         let lastMessage = React.createRef()
                         let onlineCircle = React.createRef()
-                        let messages = [ ]
+                        let chatRef = React.createRef()
 
-                        refs[json.Friends[friend].Name] = {
+                        refs[friend.Name] = {
                             lastMessage: lastMessage,
                             onlineCircle: onlineCircle,
-                            messages: messages,
-                            idFriend: parseInt(json.Friends[friend].IdFriend),
-                            friendName: json.Friends[friend].Name
+                            idFriend: parseInt(friend.IdFriend),
+                            friendName: friend.Name,
+                            chatRef: chatRef
                         }
 
                         listFriend.push(<ChatElement
-                            friend={json.Friends[friend].Name}
-                            online={json.Friends[friend].Online}
-                            lastMessage={json.Friends[friend].LastMessage}
-                            photo={`http://${this.connection.getWebServerIp()}/user-images/${json.Friends[friend].Photo}`}
+                            key={uuidv1()}
+                            friend={friend.Name}
+                            online={friend.Online}
+                            lastMessage={friend.LastMessage}
+                            photo={`http://${this.props.connection.getWebServerIp()}/user-images/${friend.Photo}`}
                             loadChat={this.loadChat.bind(this)}
                             lastMessageRef={lastMessage}
                             onlineCircleRef={onlineCircle}
-                            idFriend={parseInt(json.Friends[friend].IdFriend)}
-                            idGroup={parseInt(json.Friends[friend].IdGroup)}
+                            idFriend={parseInt(friend.IdFriend)}
+                            chat={<Chat
+                                key={parseInt(friend.IdFriend)}
+                                palette={this.context.palette}
+                                connection={this.props.connection}
+                                idFriend={parseInt(friend.IdFriend)}
+                                idGroup={undefined}
+                                isGroup={false}
+                                isFriend={true}
+                                friendName={friend.Name}
+                                groupName={undefined}
+                                ref={chatRef}
+                                lastMessageRef={lastMessage}
+                            />}
                         />)
                     }
 
@@ -92,40 +118,11 @@ class Body extends React.Component
         })
     }
 
-    /**
-     * @param {string} friendName
-     * @param {string} groupName
-     * @param {Object} message
-     */
-    updateMessages(friendName, groupName, message)
+    loadChat(chat)
     {
-        this.state.refs[friendName].messages.push(message)
-
-        this.setState(prevState => {
-            return {
-                refs: prevState.refs
-            }
-        })
-    }
-
-    loadChat(idFriend, idGroup, friendName, groupName)
-    {
-        this.setState(prevState => {
-            return ({
-                loadChat: true,
-                chat: <Chat
-                    palette={this.context.palette}
-                    messages={prevState.refs[friendName || groupName].messages}
-                    updateMessages={this.updateMessages.bind(this)}
-                    connection={this.connection}
-                    idFriend={idFriend}
-                    idGroup={idGroup}
-                    isGroup={idGroup ? true : false}
-                    isFriend={idFriend ? true : false}
-                    friendName={friendName}
-                    groupName={groupName}
-                />
-            })
+        this.setState({
+            loadChat: true,
+            chat: chat
         })
     }
 
@@ -133,6 +130,11 @@ class Body extends React.Component
     {
         return (
             <div style={{backgroundColor: this.context.palette.color, color: this.context.palette.textColor, height: "100%"}}>
+                {this.state.isServerClosing
+                ? <ThatModal activate>
+                    <Typography variant="h5">The server is closed!</Typography>
+                </ThatModal>
+                : null}
                 <Grid container style={{height: "100%"}}>
                     <Grid item xs={4} md={3} xl={2} style={{height: "100%"}} className="p-3">
                         <Paper elevation={3} style={{backgroundColor: this.context.palette.color, color: this.context.palette.textColor, height: "100%", overflowY: "auto"}}>

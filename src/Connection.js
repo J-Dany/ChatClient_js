@@ -28,12 +28,16 @@ class Connection
             Type: "FOR_PRIVATE",
             Addresse: friend,
             Message: message,
-            Data: `${dateTime.getFullYear()}-${dateTime.getMonth() < 10 ? "0" + dateTime.getMonth() : dateTime.getMonth()}-${dateTime.getDay() < 10 ? "0" + dateTime.getDay() : dateTime.getDay()} ${dateTime.getHours() < 10 ? "0" + dateTime.getHours() : dateTime.getHours()}:${dateTime.getMinutes() < 10 ? "0" + dateTime.getMinutes() : dateTime.getMinutes()}:${dateTime.getSeconds() < 10 ? "0" + dateTime.getSeconds() : dateTime.getSeconds()}`
+            HM: `${dateTime.getHours() < 10 ? "0" + dateTime.getHours() : dateTime.getHours()}:${dateTime.getMinutes() < 10 ? "0" + dateTime.getMinutes() : dateTime.getMinutes()}`,
+            Data: `${dateTime.getFullYear()}-${dateTime.getMonth() < 10 ? "0" + (dateTime.getMonth() + 1) : dateTime.getMonth() + 1}-${dateTime.getDay() < 10 ? "0" + dateTime.getDate() : dateTime.getDate()} ${dateTime.getHours() < 10 ? "0" + dateTime.getHours() : dateTime.getHours()}:${dateTime.getMinutes() < 10 ? "0" + dateTime.getMinutes() : dateTime.getMinutes()}:${dateTime.getSeconds() < 10 ? "0" + dateTime.getSeconds() : dateTime.getSeconds()}`
         }
 
         this.socket.send(JSON.stringify(mes))
 
-        return mes
+        return {
+            Message: message,
+            Data: `${dateTime.getHours() < 10 ? "0" + dateTime.getHours() : dateTime.getHours()}:${dateTime.getMinutes() < 10 ? "0" + dateTime.getMinutes() : dateTime.getMinutes()}`
+        }
     }
 
     /**
@@ -44,6 +48,16 @@ class Connection
     setOnMessageCallback(callback)
     {
         this.socket.onmessage = callback
+    }
+
+    /**
+     * Sets the callback for the event "onerror"
+     * 
+     * @param {(message:MessageEvent)} callback
+     */
+    setOnErrorCallback(callback)
+    {
+        this.socket.onerror = callback
     }
 
     /**

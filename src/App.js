@@ -122,6 +122,7 @@ class App extends React.Component
           else
           {
             alert("Login failed")
+            window.location.reload()
           }
         }
       })
@@ -178,32 +179,26 @@ class App extends React.Component
     if (this.state.serverIp === null)
     {
       return (
-        <>
-          <ThemeContext.Provider value={{palette: this.state.theme}}>
-            <ConnectionForm setServerIp={this.setIps.bind(this)} connect={this.connectTo.bind(this)} />
-          </ThemeContext.Provider>
-        </>
+        <ThemeContext.Provider value={{palette: this.state.theme}}>
+          <ConnectionForm setServerIp={this.setIps.bind(this)} connect={this.connectTo.bind(this)} />
+        </ThemeContext.Provider>
       )
     }
     
     if (!this.state.isLogged)
     {
       return (
-        <>
-          <ThemeContext.Provider value={{palette: this.state.theme}}>
-            <LoginForm connection={this.connection} removeServerIp={this.deleteServerAddress.bind(this)} setLogged={this.setIsLogged.bind(this)} />
-          </ThemeContext.Provider>
-        </>
+        <ThemeContext.Provider value={{palette: this.state.theme}}>
+          <LoginForm connection={this.connection} removeServerIp={this.deleteServerAddress.bind(this)} setLogged={this.setIsLogged.bind(this)} />
+        </ThemeContext.Provider>
       )
     }
 
     return (
-      <>
-        <ThemeContext.Provider value={{palette: this.state.theme, darkMode: this.state.darkMode}}>
-          <Header activeDarkMode={this.activeDarkMode.bind(this)} closeConnection={this.closeConnection.bind(this)} />
-          <Body connection={this.connection} />
-        </ThemeContext.Provider>
-      </>
+      <ThemeContext.Provider value={{palette: this.state.theme, darkMode: this.state.darkMode}}>
+        <Header activeDarkMode={this.activeDarkMode.bind(this)} closeConnection={this.closeConnection.bind(this)} />
+        <Body connection={this.connection} />
+      </ThemeContext.Provider>
     )
   }
 }
