@@ -21,11 +21,13 @@ class Connection
      * @param {string} message
      * @returns Object
      */
-    sendToFriend(friend, message)
+    sendToFriend(friend, message, content = "PLAIN")
     {
         let dateTime = new Date()
+
         let mes = {
             Type: "FOR_PRIVATE",
+            Content: content,
             Addresse: friend,
             Message: message,
             HM: `${dateTime.getHours() < 10 ? "0" + dateTime.getHours() : dateTime.getHours()}:${dateTime.getMinutes() < 10 ? "0" + dateTime.getMinutes() : dateTime.getMinutes()}`,

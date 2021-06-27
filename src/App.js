@@ -1,5 +1,4 @@
 import React from "react"
-import Header from "./components/functional/Header"
 import BrightnessHighIcon from '@material-ui/icons/BrightnessHigh';
 import Brightness4Icon from '@material-ui/icons/Brightness4';
 import Body from "./components/Body"
@@ -196,7 +195,6 @@ class App extends React.Component
 
     return (
       <ThemeContext.Provider value={{palette: this.state.theme, darkMode: this.state.darkMode}}>
-        <Header activeDarkMode={this.activeDarkMode.bind(this)} closeConnection={this.closeConnection.bind(this)} />
         <Body connection={this.connection} />
       </ThemeContext.Provider>
     )

@@ -5,7 +5,8 @@ A simple chat client made with [WebSocket](https://developer.mozilla.org/en-US/d
 - [Dependencies](#dependencies)
 - [Installation](#installation)
 - [Execution](#execution)
-- [Binaries]()
+- [Messages](#messages)
+- [Binaries](#binaries)
 - [Related projects](#server-and-web-server)
 
 ## Dependencies
@@ -48,6 +49,10 @@ If the application reached the served, it will display a login form
 ![Login form](images/signin_form.PNG)
 
 Enter in your credentials (to do the registration you need to use the Chat Web Server) and that's it!
+
+## Messages
+With That! you can send special messages: you can use **markdown**! So you can write multiline text
+and for send messages you need to use ```ctrl+enter```.
 
 ## Binaries
 You can find binaries of this app on *Releases* section on Github.

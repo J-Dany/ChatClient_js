@@ -1,5 +1,6 @@
 import { Avatar, Grid, Paper, Typography, Box } from "@material-ui/core"
 import React, { useContext } from "react"
+import ReactMarkdown from "react-markdown"
 import { ThemeContext } from "../../ThemeContext"
 
 function ChatElement(props)

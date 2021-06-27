@@ -5,6 +5,7 @@ import SendIcon from '@material-ui/icons/Send'
 import MessageList from "./functional/MessageList"
 import loading from "../icons/loading.svg"
 import axios from "axios"
+import CodeIcon from '@material-ui/icons/Code'
 
 class Chat extends React.Component
 {
@@ -54,7 +55,7 @@ class Chat extends React.Component
             return
         }
 
-        this.props.lastMessageRef.current.innerHTML = message.value
+        this.props.lastMessageRef.current.innerText = message.value
 
         if (this.props.isFriend)
         {
@@ -107,7 +108,7 @@ class Chat extends React.Component
 
     handleKeyDown(event)
     {
-        if (event.keyCode === 13)
+        if (event.ctrlKey && event.keyCode === 13)
         {
             this.sendMessage()
         }
@@ -127,7 +128,12 @@ class Chat extends React.Component
                 }
                 
                 <Grid container className="mt-auto w-100 p-2" >
-                    <Grid item xs={11}>
+                    <Grid item xs={1}>
+                        <IconButton edge="end" style={{color: this.context.palette.textColor}}>
+                            <CodeIcon fontSize="large" />
+                        </IconButton>
+                    </Grid>
+                    <Grid item xs={10}>
                         <TextField
                             multiline
                             fullWidth

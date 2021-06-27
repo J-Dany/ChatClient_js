@@ -5,6 +5,7 @@ import ChatElement from "./functional/ChatElement"
 import Chat from "./Chat"
 import ThatModal from "./functional/ThatModal"
 import { v1 as uuidv1 } from 'uuid'
+import ReactMarkdown from "react-markdown"
 
 class Body extends React.Component
 {
@@ -43,9 +44,8 @@ class Body extends React.Component
                             isFriendSender: true
                         })
                     }
-                    
 
-                    lastMessageRef.innerHTML = json.Message
+                    lastMessageRef.innerText = json.Message
                 break
                 case "FOR_DISCONNECTION":
                     let onlineRef = this.state.refs[json.Username].onlineCircle.current
