@@ -1,11 +1,14 @@
-import { TextField, Box, IconButton, Grid } from "@material-ui/core"
+import { TextField, Box, IconButton, Grid, createMuiTheme, ThemeProvider } from "@material-ui/core"
 import React from "react"
 import { ThemeContext } from "../ThemeContext"
 import SendIcon from '@material-ui/icons/Send'
 import MessageList from "./functional/MessageList"
 import loading from "../icons/loading.svg"
 import axios from "axios"
+import { lightBlue } from "@material-ui/core/colors"
 import CodeIcon from '@material-ui/icons/Code'
+import ModalCode from "./functional/ModalCode"
+import { v1 as uuidv1 } from 'uuid'
 
 class Chat extends React.Component
 {
@@ -114,43 +117,68 @@ class Chat extends React.Component
         }
     }
 
+    handleClickOnCodeButton()
+    {
+        this.setState(
+            {
+                modalCode: <ModalCode key={uuidv1()} />
+            }
+        )
+    }
+
     render()
     {
+        const darkTheme = createMuiTheme({
+            palette: {
+                type: "dark",
+                primary: lightBlue
+            }
+        });
+
         return (
-            <Box display="flex" flexDirection="column" className="h-100">
-                {this.state.isLoadingMessage
-                ?  <Box display="flex" flexDirection="column" className="mb-2 p-3 w-100 " style={{overflowY: 'auto'}}>
-                        <MessageList messages={this.state.messages} />
-                    </Box>
-                :   <Box display="flex" justifyContent="center" alignItems="center" className="h-100">
-                        <img src={loading} alt="loading..." width="64" height="64" />
-                    </Box>
+            <Box display="flex" flexDirection="column" className="h-100 p-2">
+                {
+                this.state.modalCode
+                    ? this.state.modalCode
+                    : null
                 }
-                
-                <Grid container className="mt-auto w-100 p-2" >
+
+                {
+                this.state.isLoadingMessage
+                    ?  <Box display="flex" flexDirection="column" className="mb-2 p-2 w-100 " style={{overflowY: 'auto'}}>
+                            <MessageList messages={this.state.messages} />
+                        </Box>
+                    :   <Box display="flex" justifyContent="center" alignItems="center" className="h-100">
+                            <img src={loading} alt="loading..." width="64" height="64" />
+                        </Box>
+                }
+
+                <Grid container className="mt-auto w-100 align-items-center p-2">
                     <Grid item xs={1}>
-                        <IconButton edge="end" style={{color: this.context.palette.textColor}}>
+                        <IconButton className="w-75" edge="end" onClick={() => this.handleClickOnCodeButton()} style={{color: this.context.palette.textColor}}>
                             <CodeIcon fontSize="large" />
                         </IconButton>
                     </Grid>
                     <Grid item xs={10}>
-                        <TextField
-                            multiline
-                            fullWidth
-                            autoFocus
-                            variant="outlined"
-                            autoComplete="off"
-                            id="textMessage"
-                            inputProps={
-                                {
-                                    style: {
-                                        color: this.props.palette.textColor,
-                                        outline: 'none'
+                        <ThemeProvider theme={darkTheme}>
+                            <TextField
+                                multiline
+                                fullWidth
+                                autoFocus
+                                autoComplete="off"
+                                variant="outlined"
+                                rowsMax={3}
+                                id="textMessage"
+                                inputProps={
+                                    {
+                                        style: {
+                                            color: this.props.palette.textColor
+                                        }
                                     }
                                 }
-                            }
-                            onKeyDown={event => this.handleKeyDown(event)}
-                        />
+                                onKeyDown={event => this.handleKeyDown(event)}
+                            />
+                        </ThemeProvider>
                     </Grid>
                     <Grid item xs={1}>
                         <Box display="flex" alignItems="center" justifyContent="center">

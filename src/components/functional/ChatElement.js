@@ -1,6 +1,5 @@
 import { Avatar, Grid, Paper, Typography, Box } from "@material-ui/core"
 import React, { useContext } from "react"
-import ReactMarkdown from "react-markdown"
 import { ThemeContext } from "../../ThemeContext"
 
 function ChatElement(props)
@@ -32,7 +31,7 @@ function ChatElement(props)
                 <Grid item xs={1}>
                     <Box display="flex" justifyContent="center" alignItems="center" className="w-100 h-100">
                         <div
-                            ref={props.onlineCircleRef} 
+                            ref={props.onlineCircleRef}
                             style={styleOnlineCircle}
                         ></div>
                     </Box>

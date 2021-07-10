@@ -5,7 +5,6 @@ import ChatElement from "./functional/ChatElement"
 import Chat from "./Chat"
 import ThatModal from "./functional/ThatModal"
 import { v1 as uuidv1 } from 'uuid'
-import ReactMarkdown from "react-markdown"
 
 class Body extends React.Component
 {
@@ -129,15 +128,15 @@ class Body extends React.Component
     render()
     {
         return (
-            <div style={{backgroundColor: this.context.palette.color, color: this.context.palette.textColor, height: "100%"}}>
+            <div style={{backgroundColor: this.context.palette.dark, color: this.context.palette.textColor, height: "100%"}}>
                 {this.state.isServerClosing
-                ? <ThatModal activate>
+                ? <ThatModal activate onClose={() => window.location.reload()}>
                     <Typography variant="h5">The server is closed!</Typography>
                 </ThatModal>
                 : null}
                 <Grid container style={{height: "100%"}}>
                     <Grid item xs={4} md={3} xl={2} style={{height: "100%"}} className="p-3">
-                        <Paper elevation={3} style={{backgroundColor: this.context.palette.color, color: this.context.palette.textColor, height: "100%", overflowY: "auto"}}>
+                        <Paper elevation={8} style={{backgroundColor: this.context.palette.dark, color: this.context.palette.textColor, height: "100%", overflowY: "auto"}}>
                             {
                                 this.state.friends
                                 ? this.state.friends.map(value => value)
@@ -146,7 +145,7 @@ class Body extends React.Component
                         </Paper>
                     </Grid>
                     <Grid item xs={8} md={9} xl={10} style={{height: "100%"}} className="p-3">
-                        <Paper elevation={3} style={{backgroundColor: this.context.palette.color, color: this.context.palette.textColor, height: "100%"}} className="p-2">
+                        <Paper elevation={8} style={{backgroundColor: this.context.palette.dark, color: this.context.palette.textColor, height: "100%"}}>
                             {
                                 this.state.loadChat
                                 ? this.state.chat

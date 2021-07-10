@@ -17,7 +17,12 @@ export default function ThatModal(props) {
     }
 
     const handleClose = () => {
-        window.location.reload()
+        setOpen(false)
+
+        if (props.onClose !== undefined)
+        {
+            props.onClose()
+        }
     }
 
     const useStyles = makeStyles((theme) => ({

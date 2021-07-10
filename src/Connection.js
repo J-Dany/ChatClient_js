@@ -84,7 +84,7 @@ class Connection
             JSON.stringify(
                 {
                     Type: "FOR_LOGIN",
-                    Sender: username,
+                    Username: username,
                     Password: password
                 }
             )
