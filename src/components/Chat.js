@@ -7,6 +7,7 @@ import loading from "../icons/loading.svg"
 import axios from "axios"
 import { lightBlue } from "@material-ui/core/colors"
 import CodeIcon from '@material-ui/icons/Code'
+import AttachFileIcon from '@material-ui/icons/AttachFile';
 import ModalCode from "./functional/ModalCode"
 import { v1 as uuidv1 } from 'uuid'
 
@@ -49,30 +50,36 @@ class Chat extends React.Component
         })
     }
 
-    sendMessage()
+    sendMessage(message, content = "PLAIN", language = null)
     {
-        let message = document.getElementById("textMessage")
-
-        if (message.value.length === 0)
+        if (message.length === 0)
         {
             return
         }
 
-        this.props.lastMessageRef.current.innerText = message.value
+        if (content === "PLAIN")
+        {
+            this.props.lastMessageRef.current.innerText = message
+        }
+        else
+        {
+            this.props.lastMessageRef.current.innerText = "...code..."
+        }        
 
         if (this.props.isFriend)
         {
             let mes = this.connection.sendToFriend(
                 this.props.friendName,
-                message.value
+                message,
+                content,
+                language
             )
-
-            message.value = ""
-            message.focus()
 
             this.updateMessages({
                 data: mes.Data,
                 message: mes.Message,
+                content: content,
+                language: language,
                 isFriendSender: false
             })
         }
@@ -88,12 +95,12 @@ class Chat extends React.Component
             .then(value => {
                 let json = value.data
 
-                console.log(json)
-
                 for (let j of json)
                 {
                     let message = {
                         message: j.message,
+                        content: j.contentType,
+                        language: j.language,
                         data: j.data,
                         isFriendSender: j.sender.idUser === parseInt(this.props.idFriend)
                             ? true
@@ -113,15 +120,17 @@ class Chat extends React.Component
     {
         if (event.ctrlKey && event.keyCode === 13)
         {
-            this.sendMessage()
+            this.sendMessage(document.getElementById("textMessage").value)
         }
     }
 
     handleClickOnCodeButton()
     {
+        this.codeRef = React.createRef()
+
         this.setState(
             {
-                modalCode: <ModalCode key={uuidv1()} />
+                modalCode: <ModalCode key={uuidv1()} sendMessage={this.sendMessage.bind(this)} />
             }
         )
     }
@@ -155,9 +164,19 @@ class Chat extends React.Component
 
                 <Grid container className="mt-auto w-100 align-items-center p-2">
                     <Grid item xs={1}>
-                        <IconButton className="w-75" edge="end" onClick={() => this.handleClickOnCodeButton()} style={{color: this.context.palette.textColor}}>
-                            <CodeIcon fontSize="large" />
-                        </IconButton>
+                        <Grid container className="w-100 align-items-center p-2">
+                            <Grid item xs={5}>
+                                <IconButton className="w-100" edge="start" style={{color: this.context.palette.textColor}}>
+                                    <AttachFileIcon fontSize="large" />
+                                </IconButton>
+                            </Grid>
+                            <Grid item xs={1}></Grid>
+                            <Grid item xs={5}>
+                                <IconButton className="w-100" onClick={() => this.handleClickOnCodeButton()} style={{color: this.context.palette.textColor}}>
+                                    <CodeIcon fontSize="large" />
+                                </IconButton>
+                            </Grid>
+                        </Grid>
                     </Grid>
                     <Grid item xs={10}>
                         <ThemeProvider theme={darkTheme}>
@@ -167,7 +186,7 @@ class Chat extends React.Component
                                 autoFocus
                                 autoComplete="off"
                                 variant="outlined"
-                                rowsMax={3}
+                                rowsMax={2}
                                 id="textMessage"
                                 inputProps={
                                     {
@@ -182,7 +201,7 @@ class Chat extends React.Component
                     </Grid>
                     <Grid item xs={1}>
                         <Box display="flex" alignItems="center" justifyContent="center">
-                            <IconButton className="w-75" edge="end" style={{color: this.context.palette.textColor}} onClick={() => this.sendMessage()}>
+                            <IconButton className="w-75" edge="end" style={{color: this.context.palette.textColor}} onClick={() => this.sendMessage(document.getElementById("textMessage").value)}>
                                 <SendIcon fontSize="large" />
                             </IconButton>
                         </Box>

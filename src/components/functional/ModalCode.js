@@ -14,6 +14,7 @@ import "ace-builds/src-noconflict/mode-pgsql"
 import "ace-builds/src-noconflict/mode-sql"
 import "ace-builds/src-noconflict/mode-golang"
 import "ace-builds/src-noconflict/mode-c9search"
+import "ace-builds/src-noconflict/mode-assembly_x86"
 import "ace-builds/src-noconflict/theme-github"
 import "ace-builds/src-noconflict/theme-monokai"
 import "ace-builds/src-noconflict/theme-terminal"
@@ -22,6 +23,16 @@ import "ace-builds/src-noconflict/theme-dracula"
 import "ace-builds/src-noconflict/theme-ambiance"
 import "ace-builds/src-noconflict/theme-tomorrow_night_blue"
 import "ace-builds/src-noconflict/theme-iplastic"
+import "ace-builds/src-min-noconflict/ext-language_tools"
+import "ace-builds/src-noconflict/snippets/python"
+import "ace-builds/src-noconflict/snippets/java"
+import "ace-builds/src-noconflict/snippets/c_cpp"
+import "ace-builds/src-noconflict/snippets/sql"
+import "ace-builds/src-noconflict/snippets/golang"
+import "ace-builds/src-noconflict/snippets/php"
+import "ace-builds/src-noconflict/snippets/sh"
+import "ace-builds/src-noconflict/snippets/css"
+import "ace-builds/src-noconflict/snippets/javascript"
 import { Grid, TextField, Box, IconButton, ThemeProvider, MenuItem, createMuiTheme } from "@material-ui/core"
 import { lightBlue } from "@material-ui/core/colors"
 import SendIcon from '@material-ui/icons/Send'
@@ -33,7 +44,9 @@ function ModalCode(props)
             type: "dark",
             primary: lightBlue
         }
-    });
+    })
+
+    let codeEditorRef = React.createRef()
 
     let themes = [
         {
@@ -72,6 +85,10 @@ function ModalCode(props)
 
     let languages = [
         {
+            name: "Asm x86",
+            tag: "assembly_x86"
+        },
+        {
             name: "C++",
             tag: "c_cpp"
         },
@@ -109,7 +126,7 @@ function ModalCode(props)
         }
     ]
 
-    const [language, setLanguage] = React.useState(languages[0].tag)
+    const [language, setLanguage] = React.useState(languages[1].tag)
     const [theme, setTheme] = React.useState(themes[0].tag)
 
     const changeLanguage = event => {
@@ -118,6 +135,10 @@ function ModalCode(props)
 
     const changeTheme = event => {
         setTheme(event.target.value)
+    }
+
+    const sendMessage = () => {
+        props.sendMessage(codeEditorRef.current.editor.getValue(), "CODE", language)
     }
 
     return (
@@ -161,17 +182,21 @@ function ModalCode(props)
                 <Grid item xs={1}></Grid>
                 <Grid item xs={3}>
                     <Box display="flex" className="w-100" alignItems="center" justifyContent="flex-end">
-                        <IconButton className="w-75" edge="end" style={{color: "white"}} onClick={() => this.sendMessage()}>
+                        <IconButton className="w-75" edge="end" style={{color: "white"}} onClick={() => sendMessage()}>
                             <SendIcon />
                         </IconButton>
                     </Box>
                 </Grid>
             </Grid>
             <AceEditor
+                ref={codeEditorRef}
                 mode={language}
                 theme={theme}
                 fontSize={14}
                 name="UNIQUE_ID_OF_DIV"
+                enableBasicAutocompletion={true}
+                enableLiveAutocompletion={true}
+                enableSnippets={true}
             />
         </ThatModal>
     )

@@ -39,12 +39,23 @@ class Body extends React.Component
                     {
                         this.state.refs[json.Sender].chatRef.current.updateMessages({
                             message: json.Message,
+                            content: json.Content,
+                            language: json.Language,
                             data: json.Data,
                             isFriendSender: true
                         })
                     }
 
-                    lastMessageRef.innerText = json.Message
+                    console.log(json.Content === "CODE")
+
+                    if (json.Content === "PLAIN")
+                    {
+                        lastMessageRef.innerText = json.Message
+                    }
+                    else
+                    {
+                        lastMessageRef.innerText = "...code..."
+                    }
                 break
                 case "FOR_DISCONNECTION":
                     let onlineRef = this.state.refs[json.Username].onlineCircle.current
@@ -136,7 +147,7 @@ class Body extends React.Component
                 : null}
                 <Grid container style={{height: "100%"}}>
                     <Grid item xs={4} md={3} xl={2} style={{height: "100%"}} className="p-3">
-                        <Paper elevation={8} style={{backgroundColor: this.context.palette.dark, color: this.context.palette.textColor, height: "100%", overflowY: "auto"}}>
+                        <Paper elevation={24} style={{backgroundColor: this.context.palette.dark, color: this.context.palette.textColor, height: "100%", borderRadius: "2px", overflowY: "auto"}}>
                             {
                                 this.state.friends
                                 ? this.state.friends.map(value => value)
@@ -145,7 +156,7 @@ class Body extends React.Component
                         </Paper>
                     </Grid>
                     <Grid item xs={8} md={9} xl={10} style={{height: "100%"}} className="p-3">
-                        <Paper elevation={8} style={{backgroundColor: this.context.palette.dark, color: this.context.palette.textColor, height: "100%"}}>
+                        <Paper elevation={24} style={{backgroundColor: this.context.palette.dark, color: this.context.palette.textColor, height: "100%", borderRadius: "2px"}}>
                             {
                                 this.state.loadChat
                                 ? this.state.chat

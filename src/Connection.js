@@ -21,7 +21,7 @@ class Connection
      * @param {string} message
      * @returns Object
      */
-    sendToFriend(friend, message, content = "PLAIN")
+    sendToFriend(friend, message, content = "PLAIN", language = null)
     {
         let dateTime = new Date()
 
@@ -29,6 +29,7 @@ class Connection
             Type: "FOR_PRIVATE",
             Content: content,
             Addresse: friend,
+            Language: language,
             Message: message,
             HM: `${dateTime.getHours() < 10 ? "0" + dateTime.getHours() : dateTime.getHours()}:${dateTime.getMinutes() < 10 ? "0" + dateTime.getMinutes() : dateTime.getMinutes()}`,
             Data: `${dateTime.getFullYear()}-${dateTime.getMonth() < 10 ? "0" + (dateTime.getMonth() + 1) : dateTime.getMonth() + 1}-${dateTime.getDay() < 10 ? "0" + dateTime.getDate() : dateTime.getDate()} ${dateTime.getHours() < 10 ? "0" + dateTime.getHours() : dateTime.getHours()}:${dateTime.getMinutes() < 10 ? "0" + dateTime.getMinutes() : dateTime.getMinutes()}:${dateTime.getSeconds() < 10 ? "0" + dateTime.getSeconds() : dateTime.getSeconds()}`
@@ -37,6 +38,8 @@ class Connection
         this.socket.send(JSON.stringify(mes))
 
         return {
+            Content: content,
+            Language: language,
             Message: message,
             Data: `${dateTime.getHours() < 10 ? "0" + dateTime.getHours() : dateTime.getHours()}:${dateTime.getMinutes() < 10 ? "0" + dateTime.getMinutes() : dateTime.getMinutes()}`
         }
