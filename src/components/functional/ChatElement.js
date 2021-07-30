@@ -15,14 +15,14 @@ function ChatElement(props)
         : {borderRadius: "50%", width: "12px", height: "12px"};
 
     return (
-        <Paper elevation={1} onClick={() => onClick()} style={{backgroundColor: context.palette.color, color: context.palette.textColor, cursor: "pointer", marginBottom: "1px"}} className="p-4">
+        <Paper elevation={1} square={true} onClick={() => onClick()} style={{backgroundColor: context.palette.color, color: context.palette.textColor, cursor: "pointer", marginBottom: "1px"}} className="p-4">
             <Grid container className="w-100">
-                <Grid item xs={4} lg={3}>
+                <Grid item xs={3}>
                     <Box display="flex" alignItems="center" style={{height: "100%"}}>
                         <Avatar src={props.photo} />
                     </Box>
                 </Grid>
-                <Grid item xs={7} lg={8}>
+                <Grid item xs={8}>
                     <Typography variant="h5">{props.friend}</Typography>
                     <div style={{overflow: "hidden", textOverflow: "ellipsis"}} className="w-100">
                         <Typography variant="caption" noWrap ref={props.lastMessageRef}>{props.lastMessage}</Typography>

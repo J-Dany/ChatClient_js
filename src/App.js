@@ -7,6 +7,7 @@ import { ThemeContext, primary, secondary } from "./ThemeContext"
 import { w3cwebsocket as WebSocket } from "websocket"
 import LoginForm from "./components/LoginForm"
 import Connection from "./Connection"
+import ThatModal from "./components/functional/ThatModal"
 
 class App extends React.Component
 {
@@ -120,8 +121,9 @@ class App extends React.Component
           }
           else
           {
-            alert("Login failed")
-            window.location.reload()
+            this.setState({
+              showLoginError: true
+            })
           }
         }
       })
@@ -186,10 +188,23 @@ class App extends React.Component
     
     if (!this.state.isLogged)
     {
+      let handleClick = event => {
+        event.preventDefault()
+
+        window.location.reload()
+      }
+
       return (
-        <ThemeContext.Provider value={{palette: this.state.theme}}>
-          <LoginForm connection={this.connection} removeServerIp={this.deleteServerAddress.bind(this)} setLogged={this.setIsLogged.bind(this)} />
-        </ThemeContext.Provider>
+        <>
+          {this.state.showLoginError
+          ? <ThatModal>
+            <h5><strong>Login failed</strong>. Click <a href="/" onClick={event => handleClick(event)}>here</a> to try again.</h5>
+          </ThatModal>
+          : null}
+          <ThemeContext.Provider value={{palette: this.state.theme}}>
+            <LoginForm connection={this.connection} removeServerIp={this.deleteServerAddress.bind(this)} setLogged={this.setIsLogged.bind(this)} />
+          </ThemeContext.Provider>
+        </>
       )
     }
 

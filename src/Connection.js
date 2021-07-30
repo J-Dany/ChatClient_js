@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid'
 class Connection
 {
     /**
@@ -25,23 +26,28 @@ class Connection
     {
         let dateTime = new Date()
 
+        const data = `${dateTime.getFullYear()}-${dateTime.getMonth() < 10 ? "0" + (dateTime.getMonth() + 1) : dateTime.getMonth() + 1}-${dateTime.getDay() < 10 ? "0" + dateTime.getDate() : dateTime.getDate()} ${dateTime.getHours() < 10 ? "0" + dateTime.getHours() : dateTime.getHours()}:${dateTime.getMinutes() < 10 ? "0" + dateTime.getMinutes() : dateTime.getMinutes()}:${dateTime.getSeconds() < 10 ? "0" + dateTime.getSeconds() : dateTime.getSeconds()}`
+        const hm = `${dateTime.getHours() < 10 ? "0" + dateTime.getHours() : dateTime.getHours()}:${dateTime.getMinutes() < 10 ? "0" + dateTime.getMinutes() : dateTime.getMinutes()}`
+
         let mes = {
             Type: "FOR_PRIVATE",
             Content: content,
             Addresse: friend,
             Language: language,
             Message: message,
-            HM: `${dateTime.getHours() < 10 ? "0" + dateTime.getHours() : dateTime.getHours()}:${dateTime.getMinutes() < 10 ? "0" + dateTime.getMinutes() : dateTime.getMinutes()}`,
-            Data: `${dateTime.getFullYear()}-${dateTime.getMonth() < 10 ? "0" + (dateTime.getMonth() + 1) : dateTime.getMonth() + 1}-${dateTime.getDay() < 10 ? "0" + dateTime.getDate() : dateTime.getDate()} ${dateTime.getHours() < 10 ? "0" + dateTime.getHours() : dateTime.getHours()}:${dateTime.getMinutes() < 10 ? "0" + dateTime.getMinutes() : dateTime.getMinutes()}:${dateTime.getSeconds() < 10 ? "0" + dateTime.getSeconds() : dateTime.getSeconds()}`
+            UniqueId: uuidv4(),
+            HM: hm,
+            Data: data
         }
 
         this.socket.send(JSON.stringify(mes))
 
         return {
-            Content: content,
-            Language: language,
-            Message: message,
-            Data: `${dateTime.getHours() < 10 ? "0" + dateTime.getHours() : dateTime.getHours()}:${dateTime.getMinutes() < 10 ? "0" + dateTime.getMinutes() : dateTime.getMinutes()}`
+            content: content,
+            language: language,
+            message: message,
+            HM: hm,
+            data: data
         }
     }
 

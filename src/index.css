@@ -27,3 +27,25 @@ code {
 .white-text {
   color: white;
 }
+
+::-webkit-scrollbar {
+  width: 2px;
+}
+
+:hover::-webkit-scrollbar {
+  width: 3px;
+}
+
+:after::-webkit-scrollbar {
+  width: 2px;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px transparent;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #03a9f4;
+  border-radius: 16px;
+}

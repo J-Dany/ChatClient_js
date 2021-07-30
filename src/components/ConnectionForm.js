@@ -1,8 +1,10 @@
 import React from "react"
+import axios from "axios"
 import { TextField, Box, Container, Button, ThemeProvider, createMuiTheme, FormControlLabel, Checkbox, Typography } from "@material-ui/core"
 import { lightBlue } from "@material-ui/core/colors"
 import { ThemeContext } from "../ThemeContext"
 import InfoButton from "./functional/InfoButton"
+import ThatModal from "./functional/ThatModal"
 
 class ConnectionForm extends React.Component
 {
@@ -48,13 +50,31 @@ class ConnectionForm extends React.Component
                         localStorage.setItem("webServerIp", webServerIp.value)
                     }
 
+                    if (localStorage.getItem("supportedLanguages") === null)
+                    {
+                        axios.get(`http://${localStorage.getItem("webServerIp")}/get-supported-language`)
+                            .then(value => {
+                                let json = value.data
+
+                                let arr = [ ]
+
+                                for (let j of json)
+                                {
+                                    arr.push(j.language)
+                                }
+
+                                localStorage.setItem("supportedLanguages", arr)
+                            })
+                    }
+
                     this.props.setServerIp(ip.value + ":" + port.value, webServerIp.value)
                 }
                 else
                 {
-                    alert(`Unable to connect to ${ip.value}:${port.value}`)
-
                     this.setState({
+                        showErrorModal: true,
+                        ip: ip.value,
+                        port: port.value,
                         server: {
                             isConnecting: false
                         }
@@ -115,11 +135,19 @@ class ConnectionForm extends React.Component
         }
         
         return (
-            <Box style={{height: "100%", backgroundColor: this.context.palette.dark}}>
-                <Container maxWidth="sm" style={{height: "100%"}}>
-                    {body}
-                </Container>
-            </Box>
+            <>
+                {this.state.showErrorModal
+                ? <ThatModal>
+                    <h5>Unable to connect to {this.state.ip}:{this.state.port}</h5>
+                </ThatModal>
+                : null}
+
+                <Box style={{height: "100%", backgroundColor: this.context.palette.dark}}>
+                    <Container maxWidth="sm" style={{height: "100%"}}>
+                        {body}
+                    </Container>
+                </Box>
+            </>
         )
     }
 }

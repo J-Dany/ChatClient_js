@@ -1,65 +1,82 @@
 import React from 'react'
+import ReactDOM from "react-dom"
 import { Modal, Box, Button } from '@material-ui/core'
 import Fade from '@material-ui/core/Fade'
-import { ThemeContext } from "../../ThemeContext"
-import { makeStyles } from '@material-ui/core/styles'
+import PropTypes from "prop-types"
 
-export default function ThatModal(props) {
+let modalRoot = document.getElementById("modal-root")
 
-    const [open, setOpen] = React.useState(props.activate ? true : false);
+class ThatModal extends React.Component
+{
+    constructor (props)
+    {
+        super(props)
+        this.state = {
+            open: true
+        }
 
-    const context = React.useContext(ThemeContext)
-
-    const palette = context.palette
-
-    const handleOpen = () => {
-        setOpen(true)
+        this.parent = document.createElement("div")
     }
 
-    const handleClose = () => {
-        setOpen(false)
-
-        if (props.onClose !== undefined)
-        {
-            props.onClose()
-        }
+    componentDidMount ()
+    {
+        modalRoot.appendChild(this.parent)
     }
 
-    const useStyles = makeStyles((theme) => ({
-        modal: {
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        },
-        paper: {
-            padding: "16px",
-            color: palette.textColor,
-            backgroundColor: palette.dark,
-            border: "1px solid #000000"
-        }
-    }));
+    componentWillUnmount ()
+    {
+        modalRoot.removeChild(this.parent)
+    }
 
-    const classes = useStyles();
+    openModal ()
+    {
+        this.setState((prevState) => {
+            return {
+                open: !prevState.open
+            }
+        }, () => {
+            if (this.state.open === false && this.props.postAction !== undefined)
+            {
+                this.props.postAction()
+            }
+        })
+    }
 
-    return (
-        <>
-            <span onClick={handleOpen}>
-                {props.activeElement}
-            </span>
+    render()
+    {
+        return ReactDOM.createPortal(
             <Modal
-                open={open}
-                onClose={handleClose}
-                className={classes.modal}
+                open={this.state.open}
+                onClose={this.openModal.bind(this)}
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}
             >
-                <Fade in={open}>
-                    <div className={classes.paper}>
-                        {props.children}
-                        <Box display="flex" justifyContent="flex-end">
-                            <Button style={{color: "#03a9f4"}} onClick={handleClose}>Close</Button>
+                <Fade in={this.state.open} timeout={300}>
+                    <Box style={{
+                        padding: "16px",
+                        color: "white",
+                        backgroundColor: "#102027",
+                        border: "1px solid #161616"
+                    }}>
+                        <div style={{padding: "2px"}}>
+                            {this.props.children}
+                        </div>
+                        <Box display="flex" justifyContent="flex-end" className="w-100 mt-auto">
+                            <Button style={{color: "#03a9f4"}} onClick={this.openModal.bind(this)}>Close</Button>
                         </Box>
-                    </div>
+                    </Box>
                 </Fade>
-            </Modal>
-        </>
-    )
+            </Modal>,
+            this.parent
+        )
+    }
+}
+
+export default ThatModal
+
+ThatModal.propTypes = {
+    postAction: PropTypes.func
 }

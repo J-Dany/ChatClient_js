@@ -9,11 +9,8 @@ import "ace-builds/src-noconflict/mode-python"
 import "ace-builds/src-noconflict/mode-php"
 import "ace-builds/src-noconflict/mode-sh"
 import "ace-builds/src-noconflict/mode-javascript"
-import "ace-builds/src-noconflict/mode-mysql"
-import "ace-builds/src-noconflict/mode-pgsql"
 import "ace-builds/src-noconflict/mode-sql"
 import "ace-builds/src-noconflict/mode-golang"
-import "ace-builds/src-noconflict/mode-c9search"
 import "ace-builds/src-noconflict/mode-assembly_x86"
 import "ace-builds/src-noconflict/theme-github"
 import "ace-builds/src-noconflict/theme-monokai"
@@ -33,7 +30,7 @@ import "ace-builds/src-noconflict/snippets/php"
 import "ace-builds/src-noconflict/snippets/sh"
 import "ace-builds/src-noconflict/snippets/css"
 import "ace-builds/src-noconflict/snippets/javascript"
-import { Grid, TextField, Box, IconButton, ThemeProvider, MenuItem, createMuiTheme } from "@material-ui/core"
+import { Grid, TextField, SvgIcon, Box, IconButton, ThemeProvider, MenuItem, createMuiTheme } from "@material-ui/core"
 import { lightBlue } from "@material-ui/core/colors"
 import SendIcon from '@material-ui/icons/Send'
 
@@ -142,8 +139,8 @@ function ModalCode(props)
     }
 
     return (
-        <ThatModal activate>
-            <Grid container className="mb-2 w-100">
+        <ThatModal>
+            <Grid container className="mb-1">
                 <Grid item xs={3}>
                     <ThemeProvider theme={darkTheme}>
                         <TextField
@@ -182,8 +179,8 @@ function ModalCode(props)
                 <Grid item xs={1}></Grid>
                 <Grid item xs={3}>
                     <Box display="flex" className="w-100" alignItems="center" justifyContent="flex-end">
-                        <IconButton className="w-75" edge="end" style={{color: "white"}} onClick={() => sendMessage()}>
-                            <SendIcon />
+                        <IconButton style={{color: "white"}} onClick={() => sendMessage()}>
+                            <SvgIcon component={SendIcon} fontSize="large" />
                         </IconButton>
                     </Box>
                 </Grid>

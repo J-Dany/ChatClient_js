@@ -13,6 +13,7 @@ class Body extends React.Component
     constructor(props)
     {
         super(props)
+
         this.state = {
             loadChat: false,
             chat: null
@@ -27,7 +28,7 @@ class Body extends React.Component
                     let lastMessageRef = this.state.refs[json.Sender].lastMessage.current
 
                     Notification.requestPermission()
-                        .then(value => {
+                        .then(() => {
                             let n = new Notification(json.Sender, {
                                 body: json.Message
                             })
@@ -37,16 +38,17 @@ class Body extends React.Component
 
                     if (this.state.refs[json.Sender].chatRef.current)
                     {
-                        this.state.refs[json.Sender].chatRef.current.updateMessages({
+                        let msg = {
                             message: json.Message,
                             content: json.Content,
                             language: json.Language,
                             data: json.Data,
+                            HM: json.HM,
                             isFriendSender: true
-                        })
-                    }
+                        }
 
-                    console.log(json.Content === "CODE")
+                        this.state.refs[json.Sender].chatRef.current.updateMessages(msg)
+                    }
 
                     if (json.Content === "PLAIN")
                     {
@@ -140,8 +142,9 @@ class Body extends React.Component
     {
         return (
             <div style={{backgroundColor: this.context.palette.dark, color: this.context.palette.textColor, height: "100%"}}>
+
                 {this.state.isServerClosing
-                ? <ThatModal activate onClose={() => window.location.reload()}>
+                ? <ThatModal postAction={() => window.location.reload()}>
                     <Typography variant="h5">The server is closed!</Typography>
                 </ThatModal>
                 : null}
