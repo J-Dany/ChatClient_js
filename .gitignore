@@ -19,3 +19,4 @@ yarn-error.log*
 chat_client*
 dist
 That!
+*.zip

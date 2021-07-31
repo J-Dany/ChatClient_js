@@ -1,12 +1,18 @@
 {
-  "name": "chat_client",
-  "homepage": "./",
+  "name": "that",
+  "author": {
+    "name": "Daniele",
+    "email": "jdanya@outlook.com"
+  },
   "version": "0.1.0",
-  "main": "electron.js",
+  "main": "public/electron.js",
   "build": {
-    "asar": false,
+    "productName": "That!",
     "directories": {
       "output": "That!"
+    },
+    "win": {
+      "icon": "build/icons/icon.png"
     }
   },
   "private": true,
@@ -29,6 +35,7 @@
     "remark-gfm": "^1.0.0",
     "remark-strip-html": "^1.0.2",
     "serve-static": "^1.14.1",
+    "url": "^0.10.3",
     "uuid": "^8.3.2",
     "web-vitals": "^1.1.1",
     "websocket": "^1.0.34"
@@ -38,9 +45,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "electron": "electron .",
-    "electron-packager-help": "electron-packager --help",
-    "make": "electron-builder"
+    "make-win": "npm run build && electron-builder build --windows --x64"
   },
   "eslintConfig": {
     "extends": [

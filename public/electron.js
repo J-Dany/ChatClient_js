@@ -1,20 +1,11 @@
 const electron = require('electron');
-const express = require('express');
-const path = require('path');
-const url = require('url');
-const fs = require('fs');
+const path = require("path");
+const url = require("url");
 
-const webServer = express();
-webServer.use(express.static(path.join(__dirname, 'build')));
-
-webServer.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'))
-})
-
-webServer.listen(61000);
-
-// Module to control application life.
 const app = electron.app;
+
+const protocol = electron.protocol;
+
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
 
@@ -24,12 +15,22 @@ let mainWindow;
 
 function createWindow() {
     // Create the browser window.
-    mainWindow = new BrowserWindow({width: 800, height: 600});
+    mainWindow = new BrowserWindow(
+        {
+            width: 800, 
+            height: 600, 
+            title: "That!"
+        }
+    );
 
     mainWindow.maximize();
     mainWindow.removeMenu();
 
-    mainWindow.loadURL("http://localhost:61000/");
+    mainWindow.loadURL(url.format({
+        pathname: "index.html",
+        protocol: "file",
+        slashes: true
+    }))
 
     // Emitted when the window is closed.
     mainWindow.on('closed', function () {
@@ -43,7 +44,16 @@ function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', () => {
+
+    // https://stackoverflow.com/questions/38204774/serving-static-files-in-electron-react-app
+    protocol.interceptFileProtocol("file", (request, callback) => {
+        const url = request.url.substr(7)
+        callback({path: path.normalize(`${__dirname}/${url}`)})
+    }, err => err ? console.error("Failed to register protocol") : null)
+
+    createWindow();
+});
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
